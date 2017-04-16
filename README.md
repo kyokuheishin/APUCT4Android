@@ -1,7 +1,7 @@
 # APUCT4Android
 An Android client for campus terminal of APU(Ritsumeikan Asia Pacific University).
 # License
-## About Okio used in this project
+## About Okio and OKHTTP used in this project
     Copyright 2013 Square, Inc.
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

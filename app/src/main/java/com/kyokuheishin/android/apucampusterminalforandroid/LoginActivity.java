@@ -3,7 +3,9 @@ package com.kyokuheishin.android.apucampusterminalforandroid;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.DownloadManager;
 import android.content.pm.PackageManager;
+import android.os.Debug;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,8 +32,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -38,7 +57,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-
+    public String JsessionID;
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -61,21 +80,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private EditText mHtmlView;
+    private String html;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.username);
         populateAutoComplete();
 
+
+        mHtmlView = (EditText) findViewById(R.id.html);
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
                     attemptLogin();
+
                     return true;
                 }
                 return false;
@@ -169,10 +193,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
         }
@@ -309,9 +329,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
 
             try {
+
+
+                ctSpTop();
+//                ctLogin(mEmail,mPassword);
+                html = ctLogin(mEmail,mPassword);
+
+                if (html.length()>400){
+                    for (int i = 0 ; i<html.length();i+=4000){
+                        if (i+4000 < html.length())
+                            Log.d("rescounter"+i,html.substring(i,i+4000));
+                        else
+                            Log.d("rescounter"+i,html.substring(i,html.length()));
+                    }
+                }else {
+                    Log.d("resinfo",html);
+                }
+
+
+
                 // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+                //Thread.sleep(2000);
+            } catch (IOException e) {
                 return false;
             }
 
@@ -333,7 +372,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                finish();
+                //finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
@@ -345,6 +384,72 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+    final OkHttpClient mOkHttpClient = new OkHttpClient().newBuilder()
+            .cookieJar(new CookieJar() {
+                List<Cookie> cookies;
+                @Override
+                public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                    this.cookies = cookies;
+                }
+
+                @Override
+                public List<Cookie> loadForRequest(HttpUrl url) {
+                    if (cookies != null)
+                        return cookies;
+                    return new ArrayList<Cookie>();
+                }
+            }).build();
+
+
+    String ctSpTop() throws IOException{
+
+
+        final Request request = new Request.Builder()
+                .url("https://portal2.apu.ac.jp/campusp/sptop.do")
+//                .addHeader("Cookie",JsessionID)
+//                .header("Host","portal2.apu.ac.jp")
+//                .header("Origin","https://portal2.apu.ac.jp")
+//                .header("Referer","https://portal2.apu.ac.jp/campusp/sptop.do")
+//                .header("Upgrade-Insecure-Requests","1")
+//                .header("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
+//                .header("Content-Type","application/x-www-form-urlencoded")
+//                .post(formBodya)
+                .build();
+        Response response = mOkHttpClient.newCall(request).execute();
+
+        return response.body().string();
+    }
+
+    String ctLogin(String username,String password) throws IOException{
+
+
+        FormBody formBody = new FormBody.Builder()
+                .addEncoded("forceDevice","sp")
+//                .addEncoded("buttonName","login")
+                .addEncoded("lang","1")
+                .addEncoded("userId",username)
+                .addEncoded("password",password)
+                .addEncoded("login", "login")
+
+                .build();
+
+
+        final Request request = new Request.Builder()
+                .url("https://portal2.apu.ac.jp/campusp/splogin.do")
+//                .addHeader("Cookie",JsessionID)
+//                .header("Host","portal2.apu.ac.jp")
+//                .header("Origin","https://portal2.apu.ac.jp")
+//                .header("Referer","https://portal2.apu.ac.jp/campusp/sptop.do")
+//                .header("Upgrade-Insecure-Requests","1")
+//                .header("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
+                .addHeader("Content-Type","application/x-www-form-urlencoded")
+                .post(formBody)
+                .build();
+        Response response = mOkHttpClient.newCall(request).execute();
+//        JsessionID = response.header("Set-Cookie").split(";")[0];
+//        Log.d("Cookie",response.headers().toString());
+        return response.body().string();
     }
 }
 

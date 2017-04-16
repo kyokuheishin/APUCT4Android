@@ -34,14 +34,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <android.support.design.widget.TextInputEditText
+                <AutoCompleteTextView
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
                     android:inputType="text"
-                    android:maxLines="1"
-                    
+                    android:maxLines="20"
                     android:singleLine="true"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -62,6 +61,17 @@
                     android:maxLines="1"
                     android:singleLine="true"/>
 
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/html"
+                    android:maxLines="4"/>
             </android.support.design.widget.TextInputLayout>
 
             <Button

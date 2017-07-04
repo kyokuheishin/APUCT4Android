@@ -83,17 +83,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private EditText mHtmlView;
     private String html;
+    private CampusTerminal ct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.username);
         populateAutoComplete();
 
 
-        mHtmlView = (EditText) findViewById(R.id.html);
+//        mHtmlView = (EditText) findViewById(R.id.html);
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -112,15 +114,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 attemptLogin();
-                Intent intent = new Intent();
-                intent.setClass(LoginActivity.this,MainActivity.class);
-                startActivity(intent);
-                finish();
+
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        ct = ((CampusTerminal)getApplicationContext());
+
     }
 
     private void populateAutoComplete() {
@@ -212,6 +213,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+            Intent intent = new Intent();
+            intent.setClass(LoginActivity.this,MainActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -327,6 +332,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
+
         }
 
         @Override
@@ -334,22 +340,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
 
             try {
+                ct.ctSpTop();
 
 
-                ctSpTop();
 //                ctLogin(mEmail,mPassword);
-                html = ctLogin(mEmail,mPassword);
+                ct.ctLogin(mEmail,mPassword);
+                Thread.sleep(3000);
 
-                if (html.length()>400){
-                    for (int i = 0 ; i<html.length();i+=4000){
-                        if (i+4000 < html.length())
-                            Log.d("rescounter"+i,html.substring(i,i+4000));
-                        else
-                            Log.d("rescounter"+i,html.substring(i,html.length()));
-                    }
-                }else {
-                    Log.d("resinfo",html);
-                }
+
+
+//                if (html.length()>400){
+//                    for (int i = 0 ; i<html.length();i+=4000){
+//                        if (i+4000 < html.length())
+//                            Log.d("rescounter"+i,html.substring(i,i+4000));
+//                        else
+//                            Log.d("rescounter"+i,html.substring(i,html.length()));
+//                    }
+//                }else {
+//                    Log.d("resinfo",html);
+//                }
 
 
 
@@ -357,6 +366,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 //Thread.sleep(2000);
             } catch (IOException e) {
                 return false;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
             for (String credential : DUMMY_CREDENTIALS) {
@@ -390,71 +401,71 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
-    final OkHttpClient mOkHttpClient = new OkHttpClient().newBuilder()
-            .cookieJar(new CookieJar() {
-                List<Cookie> cookies;
-                @Override
-                public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-                    this.cookies = cookies;
-                }
-
-                @Override
-                public List<Cookie> loadForRequest(HttpUrl url) {
-                    if (cookies != null)
-                        return cookies;
-                    return new ArrayList<Cookie>();
-                }
-            }).build();
-
-
-    String ctSpTop() throws IOException{
+//    final OkHttpClient mOkHttpClient = new OkHttpClient().newBuilder()
+//            .cookieJar(new CookieJar() {
+//                List<Cookie> cookies;
+//                @Override
+//                public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+//                    this.cookies = cookies;
+//                }
+//
+//                @Override
+//                public List<Cookie> loadForRequest(HttpUrl url) {
+//                    if (cookies != null)
+//                        return cookies;
+//                    return new ArrayList<Cookie>();
+//                }
+//            }).build();
 
 
-        final Request request = new Request.Builder()
-                .url("https://portal2.apu.ac.jp/campusp/sptop.do")
-//                .addHeader("Cookie",JsessionID)
-//                .header("Host","portal2.apu.ac.jp")
-//                .header("Origin","https://portal2.apu.ac.jp")
-//                .header("Referer","https://portal2.apu.ac.jp/campusp/sptop.do")
-//                .header("Upgrade-Insecure-Requests","1")
-//                .header("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
-//                .header("Content-Type","application/x-www-form-urlencoded")
-//                .post(formBodya)
-                .build();
-        Response response = mOkHttpClient.newCall(request).execute();
+//    String ctSpTop() throws IOException{
+//
+//
+//        final Request request = new Request.Builder()
+//                .url("https://portal2.apu.ac.jp/campusp/sptop.do")
+////                .addHeader("Cookie",JsessionID)
+////                .header("Host","portal2.apu.ac.jp")
+////                .header("Origin","https://portal2.apu.ac.jp")
+////                .header("Referer","https://portal2.apu.ac.jp/campusp/sptop.do")
+////                .header("Upgrade-Insecure-Requests","1")
+////                .header("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
+////                .header("Content-Type","application/x-www-form-urlencoded")
+////                .post(formBodya)
+//                .build();
+//        Response response = mOkHttpClient.newCall(request).execute();
+//
+//        return response.body().string();
+//    }
 
-        return response.body().string();
-    }
-
-    String ctLogin(String username,String password) throws IOException{
-
-
-        FormBody formBody = new FormBody.Builder()
-                .addEncoded("forceDevice","sp")
-//                .addEncoded("buttonName","login")
-                .addEncoded("lang","1")
-                .addEncoded("userId",username)
-                .addEncoded("password",password)
-                .addEncoded("login", "login")
-
-                .build();
-
-
-        final Request request = new Request.Builder()
-                .url("https://portal2.apu.ac.jp/campusp/splogin.do")
-//                .addHeader("Cookie",JsessionID)
-//                .header("Host","portal2.apu.ac.jp")
-//                .header("Origin","https://portal2.apu.ac.jp")
-//                .header("Referer","https://portal2.apu.ac.jp/campusp/sptop.do")
-//                .header("Upgrade-Insecure-Requests","1")
-//                .header("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
-                .addHeader("Content-Type","application/x-www-form-urlencoded")
-                .post(formBody)
-                .build();
-        Response response = mOkHttpClient.newCall(request).execute();
-//        JsessionID = response.header("Set-Cookie").split(";")[0];
-//        Log.d("Cookie",response.headers().toString());
-        return response.body().string();
-    }
+//    String ctLogin(String username,String password) throws IOException{
+//
+//
+//        FormBody formBody = new FormBody.Builder()
+//                .addEncoded("forceDevice","sp")
+////                .addEncoded("buttonName","login")
+//                .addEncoded("lang","1")
+//                .addEncoded("userId",username)
+//                .addEncoded("password",password)
+//                .addEncoded("login", "login")
+//
+//                .build();
+//
+//
+//        final Request request = new Request.Builder()
+//                .url("https://portal2.apu.ac.jp/campusp/splogin.do")
+////                .addHeader("Cookie",JsessionID)
+////                .header("Host","portal2.apu.ac.jp")
+////                .header("Origin","https://portal2.apu.ac.jp")
+////                .header("Referer","https://portal2.apu.ac.jp/campusp/sptop.do")
+////                .header("Upgrade-Insecure-Requests","1")
+////                .header("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
+//                .addHeader("Content-Type","application/x-www-form-urlencoded")
+//                .post(formBody)
+//                .build();
+//        Response response = mOkHttpClient.newCall(request).execute();
+////        JsessionID = response.header("Set-Cookie").split(";")[0];
+////        Log.d("Cookie",response.headers().toString());
+//        return response.body().string();
+//    }
 }
 

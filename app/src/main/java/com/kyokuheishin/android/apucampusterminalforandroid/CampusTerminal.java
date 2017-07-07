@@ -89,7 +89,7 @@ public class CampusTerminal extends Application{
 //        response.header("Cookie")
 
          }
-        HashMap ctGetMessageList(int type) throws IOException{
+         HashMap<String,ArrayList<String>> ctGetMessageList(int type) throws IOException{
 //            HashMap<String, ArrayList<String>> map = new HashMap<>();
             String msgsyucds = new String();
             titleList.clear();

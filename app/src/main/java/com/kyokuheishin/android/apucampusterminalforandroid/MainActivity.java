@@ -36,11 +36,13 @@ public class MainActivity extends AppCompatActivity
     private HashMap<String, ArrayList<String>> mHashMap;
     public RecyclerView recyclerView;
     public RecyclerView.LayoutManager layoutManager;
+    public Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
          layoutManager = new LinearLayoutManager(MainActivity.this);
 
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "苟も国家に利すれば生死を以てす、豈禍福に因りて之を避趨するや。", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -115,6 +117,8 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
             GetList getList = new GetList();
             getList.execute();
+            toolbar.setTitle("大学からの情報");
+
 
         } else if (id == R.id.nav_gallery) {
 
@@ -170,6 +174,7 @@ public class MainActivity extends AppCompatActivity
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(mAdapter);
+
             }
         }
     }

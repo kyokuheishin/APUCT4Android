@@ -39,10 +39,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
          layoutManager = new LinearLayoutManager(MainActivity.this);
 
@@ -71,8 +69,7 @@ public class MainActivity extends AppCompatActivity
         ct = ((CampusTerminal)getApplicationContext());
         cm = ct.new ctMessage();
 //        new Thread(mRunnable).start();
-        GetList getList = new GetList();
-        getList.execute();
+        ;
 
     }
 
@@ -116,7 +113,9 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            setContentView(R.layout.content_main);
+            GetList getList = new GetList();
+            getList.execute();
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -150,7 +149,7 @@ public class MainActivity extends AppCompatActivity
 //                Thread.sleep(20000);
                 mHashMap = cm.ctGetMessageList(0);
                 String log = mHashMap.toString();
-                Thread.sleep(2000);
+//                Thread.sleep(2000);
                 Log.d("list",log);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute(Object o) {
+         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             if (mHashMap!=null){
                 mAdapter = new RecyclerViewAdapter(mHashMap,MainActivity.this);
@@ -201,5 +200,8 @@ public class MainActivity extends AppCompatActivity
 //            }
         }
     };
+
+
+
 }
 

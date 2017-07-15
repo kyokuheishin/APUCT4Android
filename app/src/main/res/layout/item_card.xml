@@ -8,8 +8,8 @@
     card_view:cardCornerRadius="4dp"
     card_view:cardElevation="@dimen/cardview_default_elevation"
     android:layout_marginTop="2dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
     android:layout_marginBottom="3dp"
     card_view:contentPaddingTop="3dp"
     card_view:paddingEnd="4dp"
@@ -27,9 +27,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="4dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:paddingBottom="16dp"
             android:textSize="20sp"
-
+            android:textColor="#212121"
             android:text="test"
             />
         <TextView
@@ -39,8 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-
-
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:padding="4dp"
             android:text="test2"/>
 
@@ -51,6 +54,8 @@
             android:layout_width="match_parent"
             android:textSize="16sp"
             android:padding="4dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:text="text3"
             android:layout_height="wrap_content"/>
 
@@ -60,8 +65,11 @@
             android:layout_height="wrap_content"
             android:text="test3"
             android:padding="4dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_below="@id/date_reading_text"
             android:textSize="16sp"
+            android:layout_marginBottom="24dp"
             />
 
     </RelativeLayout>

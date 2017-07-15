@@ -57,6 +57,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(MessageViewHolder holder, int position) {
         holder.mTitleTextView.setText(mHashMap.get("title").get(position));
         holder.mReadingTimeTextView.setText(mHashMap.get("dateReading").get(position));
+        if (mHashMap.get("dateReading").get(position) == ""){
+            holder.mReadingTimeTextView.setHeight(0);
+            holder.mReadingTimeTextView.setVisibility(View.GONE);
+            holder.mReadingTimeTextView.setVisibility(View.INVISIBLE);
+        }
         holder.mSendingTimeTextView.setText(mHashMap.get("dateSending").get(position));
         holder.mSourceTextView.setText(mHashMap.get("source").get(position));
     }

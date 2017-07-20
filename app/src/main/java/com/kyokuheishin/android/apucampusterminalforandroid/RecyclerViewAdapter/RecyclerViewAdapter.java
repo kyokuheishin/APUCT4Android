@@ -1,6 +1,10 @@
 package com.kyokuheishin.android.apucampusterminalforandroid.RecyclerViewAdapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.kyokuheishin.android.apucampusterminalforandroid.DetailActivity;
+import com.kyokuheishin.android.apucampusterminalforandroid.MainActivity;
 import com.kyokuheishin.android.apucampusterminalforandroid.R;
 
 import java.util.ArrayList;
@@ -53,8 +59,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return nvh;
     }
 
+
+
     @Override
-    public void onBindViewHolder(MessageViewHolder holder, int position) {
+    public void onBindViewHolder(final MessageViewHolder holder, final int position) {
         holder.mTitleTextView.setText(mHashMap.get("title").get(position));
         holder.mReadingTimeTextView.setText(mHashMap.get("dateReading").get(position));
         if (mHashMap.get("dateReading").get(position) == ""){
@@ -64,6 +72,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
         holder.mSendingTimeTextView.setText(mHashMap.get("dateSending").get(position));
         holder.mSourceTextView.setText(mHashMap.get("source").get(position));
+
+        holder.mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)mContext,holder.mTitleTextView,"title");
+                Intent intent = new Intent(mContext, DetailActivity.class);
+                intent.putExtra("selectedNo.",position);
+                intent.putExtra("title",mHashMap.get("title").get(position));
+//                mContext.startActivity(intent);
+                ActivityCompat.startActivity((Activity)mContext,intent,compat.toBundle());
+            }
+        });
     }
 
     @Override

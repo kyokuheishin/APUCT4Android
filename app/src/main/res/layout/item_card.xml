@@ -33,6 +33,7 @@
             android:paddingBottom="16dp"
             android:textSize="20sp"
             android:textColor="#212121"
+            android:transitionName="title"
             android:text="test"
             />
         <TextView

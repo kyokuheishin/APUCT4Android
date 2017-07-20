@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private CardView mCardView;
     private CampusTerminal ct;
-    private CampusTerminal.ctMessage cm;
+    static CampusTerminal.ctMessage cm;
     private RecyclerViewAdapter mAdapter;
     private HashMap<String, ArrayList<String>> mHashMap;
     public RecyclerView recyclerView;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "苟も国家に利すれば生死を以てす、豈禍福に因りて之を避趨するや。", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "プロトタイプバージョンです。", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });

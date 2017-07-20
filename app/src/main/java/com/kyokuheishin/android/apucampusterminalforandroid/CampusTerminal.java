@@ -64,7 +64,7 @@ public class CampusTerminal extends Application{
         System.out.println(response.header("Set-Cookie"));
         return null;
     }
-     public class ctMessage{
+     public class ctMessage {
         private  int page = 0;
         private  ArrayList<String> titleList = new ArrayList<>();
         private  ArrayList<String> dateListSending =new ArrayList<String>();
@@ -185,6 +185,7 @@ public class CampusTerminal extends Application{
         }
 
         HashMap ctGetMessageDetail(int messageNo) throws IOException{
+
             HashMap<String,ArrayList<String>> detailMap = new HashMap();
             ArrayList<String> bodyList = new ArrayList<>();
             ArrayList<String> otherInformationList = new ArrayList<>();

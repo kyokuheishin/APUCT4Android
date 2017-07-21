@@ -114,6 +114,7 @@ public class CampusTerminal extends Application{
 //        System.out.println(response.body().toString());
             Document document = Jsoup.parse(html);
             Elements cells = document.select("li a");
+
             for (Element cell :cells) {
                 String title = cell.getElementsByTag("h4").text();
                 String dateSending = cell.select(".date:eq(1)").text();
@@ -139,7 +140,7 @@ public class CampusTerminal extends Application{
 
         }
 
-        void  ctGetMessageListNextPage() throws IOException{
+         HashMap<String,ArrayList<String>>  ctGetMessageListNextPage() throws IOException{
 //            System.out.println(String.valueOf(System.currentTimeMillis()));
             FormBody formBody = new FormBody.Builder()
                     .addEncoded("buttonName","backToList")
@@ -162,9 +163,15 @@ public class CampusTerminal extends Application{
 //            System.out.println(title.text());
 //            Elements cells = document.select("li a:gt("+String.valueOf(page*5-1)+")");
             Elements cells = document.select("li a");
-            for (int i = page*5-1;i>=0;i--){
-                cells.remove(i);
-            }
+//            for (int i = page*5-1;i>=0;i--){
+//                cells.remove(i);
+//            }
+             titleList.clear();
+             dateListSending.clear();
+             dateListReading.clear();
+             sourceList.clear();
+             linkList.clear();
+             messageMap.clear();
             for (Element cell :cells) {
                 String title = cell.getElementsByTag("h4").text();
                 String dateSending = cell.select(".date:eq(1)").text();
@@ -177,11 +184,18 @@ public class CampusTerminal extends Application{
                 sourceList.add(source);
                 linkList.add(link);
             }
+             messageMap.put("title",titleList);
+             messageMap.put("dateSending",dateListSending);
+             messageMap.put("dateReading",dateListReading);
+             messageMap.put("source",sourceList);
+             messageMap.put("link",linkList);
             System.out.println(titleList);
             System.out.println(dateListReading);
             System.out.println(dateListSending);
             System.out.println(sourceList);
             System.out.println(linkList);
+
+             return messageMap;
         }
 
         HashMap ctGetMessageDetail(int messageNo) throws IOException{

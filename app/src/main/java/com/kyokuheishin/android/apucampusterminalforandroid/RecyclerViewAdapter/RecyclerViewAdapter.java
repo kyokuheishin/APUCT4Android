@@ -19,6 +19,7 @@ import com.kyokuheishin.android.apucampusterminalforandroid.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.jar.JarException;
 
 /**
  * Created by qbx on 2017/7/7.
@@ -26,11 +27,22 @@ import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MessageViewHolder> {
     private HashMap<String, ArrayList<String>> mHashMap;
+    private ArrayList<String> mtitleList;
+    private ArrayList<String> mreadingTimeList;
+    private ArrayList<String> msendingTimeList;
+    private ArrayList<String> msourceList;
+    private int mSize;
     private Context mContext;
 
     public RecyclerViewAdapter(HashMap mHashmap,Context mContext){
         this.mHashMap = mHashmap;
         this.mContext = mContext;
+        this.mtitleList = mHashMap.get("title");
+        this.mSize = mtitleList.size();
+        this.mreadingTimeList = mHashMap.get("dateReading");
+        this.msendingTimeList = mHashMap.get("dateSending");
+        this.msourceList = mHashMap.get("source");
+
     }
 
     static class MessageViewHolder extends RecyclerView.ViewHolder{
@@ -63,15 +75,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(final MessageViewHolder holder, final int position) {
-        holder.mTitleTextView.setText(mHashMap.get("title").get(position));
-        holder.mReadingTimeTextView.setText(mHashMap.get("dateReading").get(position));
-        if (mHashMap.get("dateReading").get(position) == ""){
-            holder.mReadingTimeTextView.setHeight(0);
-            holder.mReadingTimeTextView.setVisibility(View.GONE);
-            holder.mReadingTimeTextView.setVisibility(View.INVISIBLE);
+        try {
+            holder.mTitleTextView.setText(this.mtitleList.get(position));
+            holder.mReadingTimeTextView.setText(this.mreadingTimeList.get(position));
+            if (this.mreadingTimeList.get(position) == ""){
+                holder.mReadingTimeTextView.setHeight(0);
+                holder.mReadingTimeTextView.setVisibility(View.GONE);
+                holder.mReadingTimeTextView.setVisibility(View.INVISIBLE);
+            }
+            holder.mSendingTimeTextView.setText(this.msendingTimeList.get(position));
+            holder.mSourceTextView.setText(this.msourceList.get(position));
+        }catch (IndexOutOfBoundsException e){
+            System.out.println("IndexOutOfBoundsException");
         }
-        holder.mSendingTimeTextView.setText(mHashMap.get("dateSending").get(position));
-        holder.mSourceTextView.setText(mHashMap.get("source").get(position));
+
 
         holder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,8 +103,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
     }
 
+
+
     @Override
     public int getItemCount() {
-        return mHashMap.get("title").size();
+        return this.mSize;
+    }
+
+    public void swap(HashMap<String,ArrayList<String>> hashMap){
+
+
+            this.mHashMap = hashMap;
+            this.mSize = mHashMap.get("title").size();
+//            this.mtitleList = mHashMap.get("title");
+//            this.mSize = mtitleList.size();
+//            this.mreadingTimeList = mHashMap.get("dateReading");
+//            this.msendingTimeList = mHashMap.get("dateSending");
+//            this.msourceList = mHashMap.get("source");
+
+        notifyDataSetChanged();
     }
 }

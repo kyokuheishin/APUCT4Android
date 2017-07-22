@@ -33,11 +33,13 @@ public class MainActivity extends AppCompatActivity
     static CampusTerminal.ctMessage cm;
     private RecyclerViewAdapter mAdapter;
     private HashMap<String, ArrayList<String>> mHashMap;
-    public RecyclerView recyclerView;
-    public RecyclerView.LayoutManager layoutManager;
-    public Toolbar toolbar;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private Toolbar toolbar;
     private boolean isUpdateFinished = true;
     private int mMessageType = 0;
+    private int mMessageSizeOld;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,24 +70,32 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         navigationView.setNavigationItemSelectedListener(this);
 
         ct = ((CampusTerminal) getApplicationContext());
         cm = ct.new ctMessage();
-//        new Thread(mRunnable).start();
-        ;
+        onNavigationItemSelected(navigationView.getMenu().getItem(0));
+        navigationView.setCheckedItem(R.id.nav_information_from_university);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                /*無限スクロールに関する処理*/
+
                 super.onScrollStateChanged(recyclerView, newState);
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                int totalIteamCount = recyclerView.getAdapter().getItemCount();
+                int totalItemCount = recyclerView.getAdapter().getItemCount();
                 int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
                 int visibleItemCount = recyclerView.getChildCount();
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE
-                        && lastVisibleItemPosition == totalIteamCount - 1
+                        && lastVisibleItemPosition == totalItemCount - 1
                         && visibleItemCount > 0 && isUpdateFinished) {
+                    /*スクロールの状態が停止状態　かつ　現在閲覧のは最後のカード　かつ　画面にカードが存在するとき　かつ
+                    * 前回のロード終了後のみ実行（バグ防止のため）
+                    * */
+
                     GetNextList getNextList = new GetNextList();
                     getNextList.execute();
                     Toast.makeText(MainActivity.this, "ロード中…", Toast.LENGTH_SHORT).show();
@@ -138,16 +148,19 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        /*メッセージ種類の切替にかんする処理*/
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_information_from_university) {
+            recyclerView.setVisibility(View.INVISIBLE);
+            setTitle("大学からの情報");
+            /*切替時のバグ防止のため、一時的にRecyclerViewを不可視にする*/
             // Handle the camera action
             mMessageType = 0;
             GetList getList = new GetList();
             getList.execute();
-            Toast.makeText(MainActivity.this, "ロード中…", Toast.LENGTH_SHORT).show();
-            toolbar.setTitle("大学からの情報");
+
 
 
         }
@@ -155,11 +168,13 @@ public class MainActivity extends AppCompatActivity
 //
 //        }
         else if (id == R.id.nav_important_notcie_to_you) {
+            recyclerView.setVisibility(View.INVISIBLE);
+            setTitle("あなた宛の重要なお知らせ");
             mMessageType = 1;
             GetList getList = new GetList();
             getList.execute();
             Toast.makeText(MainActivity.this, "ロード中…", Toast.LENGTH_SHORT).show();
-            toolbar.setTitle("あなた宛の重要なお知らせ");
+
         }
 //        else if (id == R.id.nav_manage) {
 //
@@ -179,6 +194,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            Toast.makeText(MainActivity.this, "ロード中…", Toast.LENGTH_SHORT).show();
+
 
         }
 
@@ -207,26 +224,36 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             if (mHashMap != null) {
+                /*コンテンツをRecyclerViewに読み込ませるための処理*/
+
                 mAdapter = new RecyclerViewAdapter(mHashMap, MainActivity.this);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(mAdapter);
+                recyclerView.setVisibility(View.VISIBLE);
 
             }
         }
     }
 
     private class GetNextList extends AsyncTask {
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
             isUpdateFinished = false;
+            mMessageSizeOld = mHashMap.get("title").size();
         }
 
         @Override
         protected void onPostExecute(Object o) {
+            /*追加コンテンツをRecyclerViewに読み込ませるための処理*/
             super.onPostExecute(o);
             if (mHashMap != null) {
+                if (mHashMap.get("title").size() == mMessageSizeOld){
+                    Toast.makeText(MainActivity.this, "これ以上ありません", Toast.LENGTH_SHORT).show();
+                }
                 mAdapter.swap(mHashMap);
             }
             isUpdateFinished = true;
@@ -236,7 +263,9 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Object doInBackground(Object[] objects) {
             try {
+
                 mHashMap = cm.ctGetMessageListNextPage();
+
 //                Thread.sleep(2000);
             } catch (IOException e) {
                 e.printStackTrace();

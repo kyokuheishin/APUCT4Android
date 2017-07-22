@@ -1,11 +1,11 @@
-package com.kyokuheishin.android.apucampusterminalforandroid; /**
+package com.kyokuheishin.android.apucampusterminalforandroid;
+/**
  * Created by qbx on 2017/4/20.
  */
 
 /*
 APU垃圾前端吃屎吧。这是我写完这个库想对你们说的全部的话。
  */
-import android.app.Activity;
 import android.app.Application;
 
 import okhttp3.*;
@@ -24,10 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CampusTerminal extends Application{
-//    private static HashMap informationMap;
-//    private static HashMap<String, ArrayList<String>> informationMap = new HashMap<>();
-    private  HashMap<String,ArrayList<String>> messageMap = new HashMap<>();
-    private  HashMap<String,ArrayList<String>> noticeMap = new HashMap<>();
+    /*バックグラウンドで実行いているため、Applicationを*/
+
     OkHttpClient mOkHttpClient = new OkHttpClient().newBuilder()
             .cookieJar(new CookieJar() {
                 List<Cookie> cookies;
@@ -45,32 +43,97 @@ public class CampusTerminal extends Application{
                     return new ArrayList<>();
                 }
             }).build();
+    /*cookiesを保存するように設定*/
+
+    private  HashMap<String,ArrayList<String>> messageMap = new HashMap<>();
+    private  HashMap<String,ArrayList<String>> noticeMap = new HashMap<>();
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String username = br.readLine();
+        String password = br.readLine();
+
+
+        CampusTerminal ct = new CampusTerminal();
+        ct.ctSpTop();
+
+        ct.ctLogin(username,password);
+
+        CampusTerminal.ctMessage cm = ct.new ctMessage();
+        cm.ctInformation();
+
+        System.out.println(cm.ctGetMessageList(0));
+
+
+
+    }
 
     Void ctSpTop() throws IOException{
 
 
         Request request = new Request.Builder()
                 .url("https://portal2.apu.ac.jp/campusp/sptop.do")
-//                .addHeader("Cookie",JsessionID)
-//                .header("Host","portal2.apu.ac.jp")
-//                .header("Origin","https://portal2.apu.ac.jp")
-//                .header("Referer","https://portal2.apu.ac.jp/campusp/sptop.do")
-//                .header("Upgrade-Insecure-Requests","1")
-//                .header("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
-//                .header("Content-Type","application/x-www-form-urlencoded")
-//                .post(formBodya)
                 .build();
+        /*ログインするためには、まずキャンパスターミナルのトップページのcookiesを取得する必要がある。なお原因は不明。*/
+
+
         Response response = mOkHttpClient.newCall(request).execute();
         System.out.println(response.header("Set-Cookie"));
         return null;
     }
+
+    private String br2nl(String html) {
+        if(html==null)
+            return html;
+        Document document = Jsoup.parse(html);
+        document.outputSettings(new Document.OutputSettings().prettyPrint(false));//makes html() preserve linebreaks and spacing
+        document.select("br").append("\\n");
+        document.select("p").prepend("\\n\\n");
+        String s = document.html().replaceAll("\\\\n", "\n");
+        return Jsoup.clean(s, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false));
+    }
+
+
+    Void ctLogin(String username, String password) throws IOException {
+/*
+  ログイン処理
+ */
+
+         FormBody formBody = new FormBody.Builder()
+                .addEncoded("forceDevice","sp")
+                .addEncoded("lang","1")
+                .addEncoded("userId",username)
+                .addEncoded("password",password)
+                .addEncoded("login", "login")
+                .build();
+/*
+  ログインフォーム構成
+ */
+
+         Request request = new Request.Builder()
+                .url("https://portal2.apu.ac.jp/campusp/splogin.do")
+                .addHeader("Content-Type","application/x-www-form-urlencoded")
+                .post(formBody)
+                .build();
+
+/*POSTリクエストサーバーに転送*/
+
+        Response response = mOkHttpClient.newCall(request).execute();
+        System.out.println(response.header("Set-Cookie"));
+
+        return null;
+    }
+
+
      public class ctMessage {
+         /*メッセージに関する処理*/
+
         private  int page = 0;
-        private  ArrayList<String> titleList = new ArrayList<>();
-        private  ArrayList<String> dateListSending =new ArrayList<String>();
-        private  ArrayList<String> dateListReading = new ArrayList<String>();
-        private  ArrayList<String> sourceList =new ArrayList<>();
-        private  ArrayList<String> linkList = new ArrayList<>();
+        private  ArrayList<String> titleList = new ArrayList<>();//タイトルを保存するためのArrayList
+        private  ArrayList<String> dateListSending =new ArrayList<>();//受信日時を保存するためのArrayList
+        private  ArrayList<String> dateListReading = new ArrayList<>();//既読日時を保存するためのArrayList
+        private  ArrayList<String> sourceList =new ArrayList<>();//送信元を保存するためのArrayList
+        private  ArrayList<String> linkList = new ArrayList<>();//リンクを保存するためのArrayList
 
         public void getInformationFromUniversity() throws IOException {
             ctGetMessageList(0);
@@ -86,36 +149,48 @@ public class CampusTerminal extends Application{
                      .build();
              String result = mOkHttpClient.newCall(request).execute().body().string();
              System.out.println(result);
-//        response.header("Cookie")
+             /*メッセージ受信一覧の画面へアクセスするためのGETリクエスト*/
 
          }
          HashMap<String,ArrayList<String>> ctGetMessageList(int type) throws IOException{
-//            HashMap<String, ArrayList<String>> map = new HashMap<>();
-            String msgsyucds = new String();
+
+            String msgsyucds = "";
             titleList.clear();
             dateListSending.clear();
             dateListReading.clear();
             sourceList.clear();
             linkList.clear();
             messageMap.clear();
+            /*上記のArrayListの初期化*/
+
+
             if (type == 0){
                 msgsyucds = "03";
             }
             else if (type == 1){
                 msgsyucds = "05";
             }
+            /*パラメータtypeの値によってアクセスするページが変わる
+            * 0の場合は“大学からの情報”
+            * 1の場合は“あなた宛の重要なお知らせ”
+            * */
 
-//        HashMap informationMap = new HashMap();
+
             Request request = new Request.Builder()
                     .url("https://portal2.apu.ac.jp/campusp/wbspmgjr.do?buttonName=searchList&msgsyucds="+msgsyucds)
                     .build();
             Response response = mOkHttpClient.newCall(request).execute();
+             /*メッセージのリストを取得するためのGETリクエスト*/
+
             String html = response.body().string();
-//        System.out.println(response.body().toString());
             Document document = Jsoup.parse(html);
             Elements cells = document.select("li a");
 
             for (Element cell :cells) {
+                /*タイトル、受信日時、既読日時、送信元、リンクを各自のArrayListに追加するための繰り返し処理
+                * JsoupというHTML処理ライブラリを使っている*/
+
+
                 String title = cell.getElementsByTag("h4").text();
                 String dateSending = cell.select(".date:eq(1)").text();
                 String dateReading = cell.select(".date:eq(2)").text();
@@ -133,6 +208,8 @@ public class CampusTerminal extends Application{
             messageMap.put("dateReading",dateListReading);
             messageMap.put("source",sourceList);
             messageMap.put("link",linkList);
+            /*すべてのArrayListをHashmapに追加する*/
+
             page = 1;
             System.out.println(messageMap);
 
@@ -141,31 +218,26 @@ public class CampusTerminal extends Application{
         }
 
          HashMap<String,ArrayList<String>>  ctGetMessageListNextPage() throws IOException{
-//            System.out.println(String.valueOf(System.currentTimeMillis()));
+            /*次のページを読み込むに関する処理*/
             FormBody formBody = new FormBody.Builder()
                     .addEncoded("buttonName","backToList")
-//                    .addEncoded("timestamp",String.valueOf(System.currentTimeMillis()))
+
                     .addEncoded("changeStateList","次の5件を読み込む")
-//                    .addEncoded("value(mssgcmnt)","")
+
                     .build();
 
              Request request = new Request.Builder()
                     .url("https://portal2.apu.ac.jp/campusp/wbspmgjr.do")
-//                    .addHeader("Referer","https://portal2.apu.ac.jp/campusp/wbspmgjr.do?buttonName=selectDetail&selectDetailIndex=0")
+
                     .post(formBody)
                     .build();
             Response response = mOkHttpClient.newCall(request).execute();
             String html = response.body().string();
-//            System.out.println(html);
+
             Document document = Jsoup.parse(html);
-//            Elements title = document.getElementsByTag("h4");
-//            System.out.println(title.size());
-//            System.out.println(title.text());
-//            Elements cells = document.select("li a:gt("+String.valueOf(page*5-1)+")");
+
             Elements cells = document.select("li a");
-//            for (int i = page*5-1;i>=0;i--){
-//                cells.remove(i);
-//            }
+
              titleList.clear();
              dateListSending.clear();
              dateListReading.clear();
@@ -199,8 +271,9 @@ public class CampusTerminal extends Application{
         }
 
         HashMap ctGetMessageDetail(int messageNo) throws IOException{
+            /*詳細メッセージに関する処理*/
 
-            HashMap<String,ArrayList<String>> detailMap = new HashMap();
+            HashMap<String,ArrayList<String>> detailMap = new HashMap<>();
             ArrayList<String> bodyList = new ArrayList<>();
             ArrayList<String> otherInformationList = new ArrayList<>();
             ArrayList<String> otherInformationContentList = new ArrayList<>();
@@ -213,26 +286,23 @@ public class CampusTerminal extends Application{
                     .build();
             Response response = mOkHttpClient.newCall(request).execute();
             String html = response.body().string();
-//        System.out.println(html);
-//        System.out.println(response.body().toString());
+
             Document document = Jsoup.parse(html);
-//        System.out.println(document.body().text());
+
             document.outputSettings(new Document.OutputSettings().prettyPrint(false));
-//        System.out.println(document.text());
+
             Element detail = document.getElementById("detail");
-//        System.out.println(detail.text());
-//        String content = detail.select("h3:eq(1)").text();
-//        System.out.println(content);
+
             String body = detail.select("p:not(.content)").toString();
             bodyList.add(br2nl(body));
 
-//        System.out.println(br2nl(body));
+
             Elements otherInformations = detail.select("font.label");
             Elements otherInformationContents = detail.select(".content");
             Elements otherInformationLinks = detail.select("a:not([data-role])").select("a:not([onclick])");
             Elements otherInformationFileLinks = detail.select("a:not([target])").select("a:not([data-role])");
 
-//        System.out.println(otherInformationContent.text());
+
             for (Element otherInformation : otherInformations){
                 otherInformationList.add(otherInformation.text());
                 System.out.println(otherInformation.text());
@@ -259,12 +329,12 @@ public class CampusTerminal extends Application{
             System.out.println(detailMap);
 
             return detailMap;
-//        if ()
-//        String otherInformation = detail.select("font.label").text();
-//        System.out.println(otherInformation);
+
 
         }
     }
+
+    /*以下の機能はまだ実装していない。*/
 
      class ctCourseNotice{
          ArrayList<String> titleList = new ArrayList<>();
@@ -303,10 +373,6 @@ public class CampusTerminal extends Application{
             System.out.println(noticeMap);
 
             return noticeMap;
-//            Elements titles = doc.select(".rsunamC");
-//            Elements times = doc.select(".yobijigen");
-//            Elements teachers =doc.select(".shimei");
-//            Elements dates = doc.select(".ui-li-desc");
         }
 
         void ctGetCourseNoticeDetail() throws IOException {
@@ -329,94 +395,10 @@ public class CampusTerminal extends Application{
             }
 
 
-//            System.out.println(titleList);
+
             System.out.println(informationTitleList);
             System.out.println(informationContentList);
         }
-    }
-
-
-
-
-    private String br2nl(String html) {
-        if(html==null)
-            return html;
-        Document document = Jsoup.parse(html);
-        document.outputSettings(new Document.OutputSettings().prettyPrint(false));//makes html() preserve linebreaks and spacing
-        document.select("br").append("\\n");
-        document.select("p").prepend("\\n\\n");
-        String s = document.html().replaceAll("\\\\n", "\n");
-        return Jsoup.clean(s, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false));
-    }
-
-     String cleanPreserveLineBreaks(String bodyHtml) {
-
-        // get pretty printed html with preserved br and p tags
-        String prettyPrintedBodyFragment = Jsoup.clean(bodyHtml, "", Whitelist.none().addTags("br", "p"), new Document.OutputSettings().prettyPrint(true));
-        // get plain text with preserved line breaks by disabled prettyPrint
-        return Jsoup.clean(prettyPrintedBodyFragment, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false));
-    }
-
-
-
-     Void ctLogin(String username, String password) throws IOException {
-
-
-         FormBody formBody = new FormBody.Builder()
-                .addEncoded("forceDevice","sp")
-                .addEncoded("lang","1")
-                .addEncoded("userId",username)
-                .addEncoded("password",password)
-                .addEncoded("login", "login")
-
-                .build();
-
-
-         Request request = new Request.Builder()
-                .url("https://portal2.apu.ac.jp/campusp/splogin.do")
-//                .addHeader("Cookie",JsessionID)
-//                .header("Host","portal2.apu.ac.jp")
-//                .header("Origin","https://portal2.apu.ac.jp")
-//                .header("Referer","https://portal2.apu.ac.jp/campusp/sptop.do")
-//                .header("Upgrade-Insecure-Requests","1")
-//                .header("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
-                .addHeader("Content-Type","application/x-www-form-urlencoded")
-                .post(formBody)
-                .build();
-        Response response = mOkHttpClient.newCall(request).execute();
-        System.out.println(response.header("Set-Cookie"));
-//        JsessionID = response.header("Set-Cookie").split(";")[0];
-//        Log.d("Cookie",response.headers().toString());
-        return null;
-    }
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String username = br.readLine();
-        String password = br.readLine();
-
-//        System.out.println(ctSpTop());
-//        System.out.println(ctLogin(username,password));
-//        System.out.println(ctInformation());
-//        ctMessage.getImportantMessageToYou();
-        CampusTerminal ct = new CampusTerminal();
-        ct.ctSpTop();
-
-        ct.ctLogin(username,password);
-//        ct.ctInformation();
-        CampusTerminal.ctMessage cm = ct.new ctMessage();
-        cm.ctInformation();
-
-        System.out.println(cm.ctGetMessageList(0));
-
-
-//        ctMessage.ctGetMessageDetail(0);
-
-//        System.out.println(informationMap);
-//        ctCourseNotice.ctGetCourseNoticeDetail();
-    }
-    public void init(){
-
-
     }
 
 

@@ -349,7 +349,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 ct.ctSpTop();
 
 
-//                ctLogin(mEmail,mPassword);
                 ct.ctLogin(mEmail,mPassword);
                 Thread.sleep(3000);
 
@@ -407,71 +406,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
-//    final OkHttpClient mOkHttpClient = new OkHttpClient().newBuilder()
-//            .cookieJar(new CookieJar() {
-//                List<Cookie> cookies;
-//                @Override
-//                public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-//                    this.cookies = cookies;
-//                }
-//
-//                @Override
-//                public List<Cookie> loadForRequest(HttpUrl url) {
-//                    if (cookies != null)
-//                        return cookies;
-//                    return new ArrayList<Cookie>();
-//                }
-//            }).build();
 
-
-//    String ctSpTop() throws IOException{
-//
-//
-//        final Request request = new Request.Builder()
-//                .url("https://portal2.apu.ac.jp/campusp/sptop.do")
-////                .addHeader("Cookie",JsessionID)
-////                .header("Host","portal2.apu.ac.jp")
-////                .header("Origin","https://portal2.apu.ac.jp")
-////                .header("Referer","https://portal2.apu.ac.jp/campusp/sptop.do")
-////                .header("Upgrade-Insecure-Requests","1")
-////                .header("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
-////                .header("Content-Type","application/x-www-form-urlencoded")
-////                .post(formBodya)
-//                .build();
-//        Response response = mOkHttpClient.newCall(request).execute();
-//
-//        return response.body().string();
-//    }
-
-//    String ctLogin(String username,String password) throws IOException{
-//
-//
-//        FormBody formBody = new FormBody.Builder()
-//                .addEncoded("forceDevice","sp")
-////                .addEncoded("buttonName","login")
-//                .addEncoded("lang","1")
-//                .addEncoded("userId",username)
-//                .addEncoded("password",password)
-//                .addEncoded("login", "login")
-//
-//                .build();
-//
-//
-//        final Request request = new Request.Builder()
-//                .url("https://portal2.apu.ac.jp/campusp/splogin.do")
-////                .addHeader("Cookie",JsessionID)
-////                .header("Host","portal2.apu.ac.jp")
-////                .header("Origin","https://portal2.apu.ac.jp")
-////                .header("Referer","https://portal2.apu.ac.jp/campusp/sptop.do")
-////                .header("Upgrade-Insecure-Requests","1")
-////                .header("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
-//                .addHeader("Content-Type","application/x-www-form-urlencoded")
-//                .post(formBody)
-//                .build();
-//        Response response = mOkHttpClient.newCall(request).execute();
-////        JsessionID = response.header("Set-Cookie").split(";")[0];
-////        Log.d("Cookie",response.headers().toString());
-//        return response.body().string();
-//    }
 }
 

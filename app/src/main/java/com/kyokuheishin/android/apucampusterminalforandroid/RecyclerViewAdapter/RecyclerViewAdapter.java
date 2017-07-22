@@ -13,13 +13,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kyokuheishin.android.apucampusterminalforandroid.DetailActivity;
-import com.kyokuheishin.android.apucampusterminalforandroid.MainActivity;
 import com.kyokuheishin.android.apucampusterminalforandroid.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.jar.JarException;
+import java.util.Objects;
 
 /**
  * Created by qbx on 2017/7/7.
@@ -53,7 +51,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView mSourceTextView;
 
 
-        public MessageViewHolder(View itemView) {
+        MessageViewHolder(View itemView) {
             super(itemView);
             mCardView = (CardView) itemView.findViewById(R.id.card_view);
             mTitleTextView = (TextView) itemView.findViewById(R.id.title_text);
@@ -66,9 +64,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public RecyclerViewAdapter.MessageViewHolder onCreateViewHolder(ViewGroup viewGroup,int i ){
+        /*CardViewのレイアウトを読み込むための処理*/
+
         View v = LayoutInflater.from(mContext).inflate(R.layout.item_card,viewGroup,false);
-        MessageViewHolder nvh = new  MessageViewHolder(v);
-        return nvh;
+        return new  MessageViewHolder(v);
     }
 
 
@@ -76,12 +75,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(final MessageViewHolder holder, final int position) {
         try {
+            /*原因不明かつ無視しても無害のIndexOutOfBoundsExceptionが出るため、try　catchを使っている。*/
+
             holder.mTitleTextView.setText(this.mtitleList.get(position));
             holder.mReadingTimeTextView.setText(this.mreadingTimeList.get(position));
-            if (this.mreadingTimeList.get(position) == ""){
-                holder.mReadingTimeTextView.setHeight(0);
+            if (Objects.equals(this.mreadingTimeList.get(position), "")){
                 holder.mReadingTimeTextView.setVisibility(View.GONE);
-                holder.mReadingTimeTextView.setVisibility(View.INVISIBLE);
+            }else {
+                holder.mReadingTimeTextView.setVisibility(View.VISIBLE);
             }
             holder.mSendingTimeTextView.setText(this.msendingTimeList.get(position));
             holder.mSourceTextView.setText(this.msourceList.get(position));
@@ -93,11 +94,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)mContext,holder.mTitleTextView,"title");
+                /*二つのTextViewの連携アニメーションを実装*/
+
+                ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation
+                        ((Activity)mContext,holder.mTitleTextView,"title");
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.putExtra("selectedNo.",position);
                 intent.putExtra("title",mHashMap.get("title").get(position));
-//                mContext.startActivity(intent);
                 ActivityCompat.startActivity((Activity)mContext,intent,compat.toBundle());
             }
         });
@@ -115,11 +118,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             this.mHashMap = hashMap;
             this.mSize = mHashMap.get("title").size();
-//            this.mtitleList = mHashMap.get("title");
-//            this.mSize = mtitleList.size();
-//            this.mreadingTimeList = mHashMap.get("dateReading");
-//            this.msendingTimeList = mHashMap.get("dateSending");
-//            this.msourceList = mHashMap.get("source");
+
 
         notifyDataSetChanged();
     }

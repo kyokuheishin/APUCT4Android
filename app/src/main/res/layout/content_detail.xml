@@ -5,29 +5,174 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.kyokuheishin.android.apucampusterminalforandroid.DetailActivity"
 
     tools:showIn="@layout/activity_detail">
-
-
-        <TableRow
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical">
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:textSize="14sp"
+            android:textColor="@color/colorSecondaryText"
+            android:text="@string/detail_body"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            android:textColor="#212121"
+            android:id="@+id/detail_body"
+            />
 
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             >
+            <TableRow
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="14sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/time_receiving"
+                    android:textStyle="normal"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="56dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/colorPrimaryText"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    android:id="@+id/detail_receiving_time"
+                    />
+
+            </TableRow>
+            <TableRow
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="14sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/detail_viewing_period"
+                    android:textStyle="normal"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="56dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/colorPrimaryText"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    android:id="@+id/detail_viewing_period"
+                    />
+            </TableRow>
+
+            <TableRow
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="14sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/detail_source"
+                    android:textStyle="normal"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="56dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/colorPrimaryText"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    android:id="@+id/detail_source"
+                    />
+            </TableRow>
+
+            <TableRow
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:textColor="@color/colorSecondaryText"
                 android:textSize="14sp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/detail_url"
                 android:textStyle="normal"
-                android:textColor="#212121"
-
-                android:id="@+id/detail_body"
                 />
-        </TableRow>
+            <LinearLayout
+                android:id="@+id/content_detail_url"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="56dp"
+                android:orientation="vertical"></LinearLayout>
+            </TableRow>
+
+            <TableRow
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="14sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/detail_file"
+                    android:textStyle="normal"
+                    />
+            </TableRow>
+
+        </TableLayout>
+    </LinearLayout>
+
+
+
+
+
 
 
 

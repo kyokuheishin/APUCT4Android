@@ -24,7 +24,13 @@
     <string name="important_message_to_you">"あなた宛の重要なお知らせ"</string>
     <string name="course_notice">"教務掲示"</string>
     <string name="logout">"ログアウト"</string>
+    <string name="time_receiving">"受信日時"</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="detail_body">"本文"</string>
+    <string name="detail_viewing_period">"掲示期間"</string>
+    <string name="detail_source">"送信元"</string>
+    <string name="detail_url">"URL"</string>
+    <string name="detail_file">"添付ファイル"</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

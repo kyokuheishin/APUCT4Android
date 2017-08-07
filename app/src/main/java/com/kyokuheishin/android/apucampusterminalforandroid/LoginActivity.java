@@ -84,6 +84,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mHtmlView;
     private String html;
     private CampusTerminal ct;
+    private boolean isSuccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,10 +220,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
-            Intent intent = new Intent();
-            intent.setClass(LoginActivity.this,MainActivity.class);
-            startActivity(intent);
-            finish();
+
         }
     }
 
@@ -334,6 +332,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        private boolean loginStatus;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -349,42 +348,29 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 ct.ctSpTop();
 
 
-                ct.ctLogin(mEmail,mPassword);
+                loginStatus = ct.ctLogin(mEmail,mPassword);
                 Thread.sleep(3000);
+                return loginStatus;
 
 
 
-//                if (html.length()>400){
-//                    for (int i = 0 ; i<html.length();i+=4000){
-//                        if (i+4000 < html.length())
-//                            Log.d("rescounter"+i,html.substring(i,i+4000));
-//                        else
-//                            Log.d("rescounter"+i,html.substring(i,html.length()));
-//                    }
-//                }else {
-//                    Log.d("resinfo",html);
-//                }
-
-
-
-                // Simulate network access.
-                //Thread.sleep(2000);
             } catch (IOException e) {
                 return false;
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
+//            for (String credential : DUMMY_CREDENTIALS) {
+//                String[] pieces = credential.split(":");
+//                if (pieces[0].equals(mEmail)) {
+//                    // Account exists, return true if the password matches.
+//                    return pieces[1].equals(mPassword);
+//                }
+//            }
 
             // TODO: register the new account here.
-            return true;
+
         }
 
         @Override
@@ -394,6 +380,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 //finish();
+                Intent intent =new Intent(LoginActivity.this,MainActivity.class);
+                startActivity(intent);
+                finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

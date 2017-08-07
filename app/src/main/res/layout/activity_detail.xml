@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+
     tools:context="com.kyokuheishin.android.apucampusterminalforandroid.DetailActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -13,8 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
         android:fitsSystemWindows="true"
+        android:transitionName="title"
         android:theme="@style/AppTheme.AppBarOverlay"
-        android:transitionName="title">
+        >
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
@@ -37,6 +39,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_detail"/>
+
 
 
 

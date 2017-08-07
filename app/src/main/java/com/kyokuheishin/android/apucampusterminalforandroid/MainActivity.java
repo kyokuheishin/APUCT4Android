@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        /*メッセージ種類の切替にかんする処理*/
+        /*メッセージ種類の切替に関する処理*/
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 

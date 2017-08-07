@@ -88,13 +88,14 @@ public class CampusTerminal extends Application{
         Document document = Jsoup.parse(html);
         document.outputSettings(new Document.OutputSettings().prettyPrint(false));//makes html() preserve linebreaks and spacing
         document.select("br").append("\\n");
-        document.select("p").prepend("\\n\\n");
+        document.select("p").prepend("");
+//        document.select("p").prepend("\\n\\n");
         String s = document.html().replaceAll("\\\\n", "\n");
         return Jsoup.clean(s, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false));
     }
 
 
-    Void ctLogin(String username, String password) throws IOException {
+    Boolean ctLogin(String username, String password) throws IOException {
 /*
   ログイン処理
  */
@@ -119,9 +120,15 @@ public class CampusTerminal extends Application{
 /*POSTリクエストサーバーに転送*/
 
         Response response = mOkHttpClient.newCall(request).execute();
-        System.out.println(response.header("Set-Cookie"));
+//        System.out.println(response.header("Set-Cookie"));
 
-        return null;
+        String html = response.body().string();
+        Document document = Jsoup.parse(html);
+        Elements elements = document.select("[style=\"color:red\"]");
+        if (elements.size()>0){
+            return false;
+        }
+        else return true;
     }
 
 
@@ -278,6 +285,8 @@ public class CampusTerminal extends Application{
             ArrayList<String> otherInformationList = new ArrayList<>();
             ArrayList<String> otherInformationContentList = new ArrayList<>();
             ArrayList<String> otherInformationLinkList = new ArrayList<>();
+            ArrayList<String> otherInformationLinkTitleList = new ArrayList<>();
+            ArrayList<String> otherInformationFileTitleList = new ArrayList<>();
             ArrayList<String> otherInformationFileLinkList = new ArrayList<>();
             ArrayList<String> links = messageMap.get("link");
 
@@ -294,11 +303,12 @@ public class CampusTerminal extends Application{
             Element detail = document.getElementById("detail");
 
             String body = detail.select("p:not(.content)").toString();
-            bodyList.add(br2nl(body));
+            bodyList.add(br2nl(body).trim());
 
 
             Elements otherInformations = detail.select("font.label");
-            Elements otherInformationContents = detail.select(".content");
+            Elements otherInformationContents = detail.select("p.content:not(:has(font)):not(:has(a))");
+            Elements otherInformationFileTitles = detail.select("p.content:has(a)");
             Elements otherInformationLinks = detail.select("a:not([data-role])").select("a:not([onclick])");
             Elements otherInformationFileLinks = detail.select("a:not([target])").select("a:not([data-role])");
 
@@ -309,11 +319,15 @@ public class CampusTerminal extends Application{
             }
 
             for (Element otherInformationContent : otherInformationContents){
-                otherInformationContentList.add(otherInformationContent.text());
+                if (! otherInformationContent.text().equals("")){
+                        otherInformationContentList.add(otherInformationContent.text());
+                    }
+
                 System.out.println(otherInformationContent.text());
             }
             for (Element otherInformationLink:otherInformationLinks){
                 System.out.println(otherInformationLink.text());
+                otherInformationLinkTitleList.add(otherInformationLink.text());
                 otherInformationLinkList.add(otherInformationLink.attr("href"));
             }
 
@@ -321,10 +335,17 @@ public class CampusTerminal extends Application{
                 System.out.println(otherInformationFileLink.attr("href"));
                 otherInformationFileLinkList.add(otherInformationFileLink.attr("href"));
             }
+
+            for (Element otherInformationFileTitle:otherInformationFileTitles){
+                System.out.println(otherInformationFileTitle.text());
+                otherInformationFileTitleList.add(otherInformationFileTitle.text());
+            }
             detailMap.put("body",bodyList);
             detailMap.put("otherInformationTitle",otherInformationList);
             detailMap.put("otherInformationContent",otherInformationContentList);
+            detailMap.put("otherInformationLinkTitle",otherInformationLinkTitleList);
             detailMap.put("otherInformationLink",otherInformationLinkList);
+            detailMap.put("otherInformationFileTitle",otherInformationFileTitleList);
             detailMap.put("otherInformationFileLink",otherInformationFileLinkList);
             System.out.println(detailMap);
 

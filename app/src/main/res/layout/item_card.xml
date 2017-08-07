@@ -13,6 +13,7 @@
     android:layout_marginBottom="3dp"
     card_view:contentPaddingTop="3dp"
     card_view:paddingEnd="4dp"
+
     android:clickable="true"
     android:foreground="?android:selectableItemBackground"
     >
@@ -20,9 +21,11 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         >
         <TextView
             android:id="@+id/title_text"
+            android:transitionName="title"
             android:fontFamily="sans-serif-medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +36,7 @@
             android:paddingBottom="16dp"
             android:textSize="20sp"
             android:textColor="#212121"
-            android:transitionName="title"
+
             android:text="test"
             />
         <TextView

@@ -26,19 +26,28 @@ import java.util.List;
 public class CampusTerminal extends Application{
     /*バックグラウンドで実行いているため、Applicationを*/
 
+    private ArrayList<String> mCookies = new ArrayList<>();
+    private List<Cookie> cookies;
+
     OkHttpClient mOkHttpClient = new OkHttpClient().newBuilder()
             .cookieJar(new CookieJar() {
-                List<Cookie> cookies;
+
                 @Override
                 public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-                    this.cookies = cookies;
-                    System.out.println(cookies);
+                    CampusTerminal.this.cookies = cookies;
+                    if (cookies != null){
+                        mCookies.clear();
+                        mCookies.add(cookies.toString());
+                    }
+//                    System.out.println("okhttpcookies");
+//                    System.out.println(cookies.toString());
                 }
 
                 @Override
                 public List<Cookie> loadForRequest(HttpUrl url) {
                     if (cookies != null){
-                        System.out.println(cookies);
+//                        System.out.println(cookies);
+
                         return cookies;}
                     return new ArrayList<>();
                 }
@@ -78,7 +87,14 @@ public class CampusTerminal extends Application{
 
 
         Response response = mOkHttpClient.newCall(request).execute();
-        System.out.println(response.header("Set-Cookie"));
+        if (response.isSuccessful()){
+//            System.out.println("sptop");
+//            System.out.println(response.header("Set-Cookie").getClass());
+//            System.out.println(response.header("Set-Cookie"));
+//
+//            System.out.println(response.header("Set-Cookie").getClass());
+        }
+
         return null;
     }
 
@@ -120,8 +136,9 @@ public class CampusTerminal extends Application{
 /*POSTリクエストサーバーに転送*/
 
         Response response = mOkHttpClient.newCall(request).execute();
+////        System.out.println(response.header("Set-Cookie"));
+//        System.out.println("logincookies");
 //        System.out.println(response.header("Set-Cookie"));
-
         String html = response.body().string();
         Document document = Jsoup.parse(html);
         Elements elements = document.select("[style=\"color:red\"]");
@@ -154,8 +171,9 @@ public class CampusTerminal extends Application{
              Request request = new Request.Builder()
                      .url("https://portal2.apu.ac.jp/campusp/wbspmgjr.do?clearAccessData=true&contenam=wbspmgjr&kjnmnNo=9")
                      .build();
-             String result = mOkHttpClient.newCall(request).execute().body().string();
-             System.out.println(result);
+             Response response = mOkHttpClient.newCall(request).execute();
+//             System.out.println("informationcookies");
+//             System.out.println(response.header("Set-Cookie"));
              /*メッセージ受信一覧の画面へアクセスするためのGETリクエスト*/
 
          }
@@ -187,6 +205,8 @@ public class CampusTerminal extends Application{
                     .url("https://portal2.apu.ac.jp/campusp/wbspmgjr.do?buttonName=searchList&msgsyucds="+msgsyucds)
                     .build();
             Response response = mOkHttpClient.newCall(request).execute();
+//             System.out.println("listcookies");
+//             System.out.println(response.header("Set-Cookie"));
              /*メッセージのリストを取得するためのGETリクエスト*/
 
             String html = response.body().string();
@@ -218,7 +238,7 @@ public class CampusTerminal extends Application{
             /*すべてのArrayListをHashmapに追加する*/
 
             page = 1;
-            System.out.println(messageMap);
+//            System.out.println(messageMap);
 
             return messageMap;
 
@@ -239,6 +259,8 @@ public class CampusTerminal extends Application{
                     .post(formBody)
                     .build();
             Response response = mOkHttpClient.newCall(request).execute();
+//             System.out.println("nextpagecookies");
+//             System.out.println(response.header("Set-Cookie"));
             String html = response.body().string();
 
             Document document = Jsoup.parse(html);
@@ -268,11 +290,11 @@ public class CampusTerminal extends Application{
              messageMap.put("dateReading",dateListReading);
              messageMap.put("source",sourceList);
              messageMap.put("link",linkList);
-            System.out.println(titleList);
-            System.out.println(dateListReading);
-            System.out.println(dateListSending);
-            System.out.println(sourceList);
-            System.out.println(linkList);
+//            System.out.println(titleList);
+//            System.out.println(dateListReading);
+//            System.out.println(dateListSending);
+//            System.out.println(sourceList);
+//            System.out.println(linkList);
 
              return messageMap;
         }
@@ -294,6 +316,8 @@ public class CampusTerminal extends Application{
                     .url("https://portal2.apu.ac.jp/campusp/"+ links.get(messageNo))
                     .build();
             Response response = mOkHttpClient.newCall(request).execute();
+//            System.out.println("detailcookies");
+//            System.out.println(response.header("Set-Cookie"));
             String html = response.body().string();
 
             Document document = Jsoup.parse(html);
@@ -340,6 +364,7 @@ public class CampusTerminal extends Application{
                 System.out.println(otherInformationFileTitle.text());
                 otherInformationFileTitleList.add(otherInformationFileTitle.text());
             }
+//            mCookies.add(cookies.toString());
             detailMap.put("body",bodyList);
             detailMap.put("otherInformationTitle",otherInformationList);
             detailMap.put("otherInformationContent",otherInformationContentList);
@@ -347,6 +372,8 @@ public class CampusTerminal extends Application{
             detailMap.put("otherInformationLink",otherInformationLinkList);
             detailMap.put("otherInformationFileTitle",otherInformationFileTitleList);
             detailMap.put("otherInformationFileLink",otherInformationFileLinkList);
+            detailMap.put("cookies",mCookies);
+
             System.out.println(detailMap);
 
             return detailMap;

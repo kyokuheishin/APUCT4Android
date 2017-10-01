@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "プロトタイプバージョンです。", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "ベータ版です。", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });

@@ -25,6 +25,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.URL;
@@ -40,7 +41,7 @@ public class DetailActivity extends AppCompatActivity {
     private CampusTerminal.ctMessage cm;
     private LinearLayout urlLinearLayout,fileLinearLayout;
     private TextView bodyTextView,receivingTimeTextView,viewingPeriodTextView,sourceTextView;
-    private TableRow urlTableRow, fileTableRow;
+    private TableRow urlTableRow, fileTableRow,periodTableRow;
     private String cookies;
     private ListView urlListView,fileListView;
     private android.view.ViewGroup.LayoutParams params;
@@ -73,6 +74,7 @@ public class DetailActivity extends AppCompatActivity {
 
         urlTableRow = (TableRow) findViewById(R.id.content_detail_url_row);
         fileTableRow = (TableRow)findViewById(R.id.content_detail_file_row);
+        periodTableRow = (TableRow)findViewById(R.id.detail_viewing_period_row);
 
 //        urlListView = (ListView)findViewById(R.id.detail_url_list);
 
@@ -123,6 +125,7 @@ public class DetailActivity extends AppCompatActivity {
                             Log.d("stringurl",stringUrl);
                             DownloadManager.Request request =
                                     new DownloadManager.Request(Uri.parse(stringUrl));
+                            Toast.makeText(DetailActivity.this, "ダウンロード開始…", Toast.LENGTH_SHORT).show();
                             Log.d("cookies",cookies);
                             request.addRequestHeader("Cookie", cookies);
                             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
@@ -151,9 +154,16 @@ public class DetailActivity extends AppCompatActivity {
             super.onPostExecute(o);
             if (mHashMap != null){
                 bodyTextView.setText(mHashMap.get("body").get(0));
-                receivingTimeTextView.setText(mHashMap.get("otherInformationContent").get(0));
-                viewingPeriodTextView.setText(mHashMap.get("otherInformationContent").get(1));
-                sourceTextView.setText(mHashMap.get("otherInformationContent").get(2));
+                if (mHashMap.get("otherInformationContent").size() == 2){
+                    receivingTimeTextView.setText(mHashMap.get("otherInformationContent").get(0));
+                    sourceTextView.setText(mHashMap.get("otherInformationContent").get(1));
+                }else {
+                    periodTableRow.setVisibility(View.VISIBLE);
+                    receivingTimeTextView.setText(mHashMap.get("otherInformationContent").get(0));
+                    viewingPeriodTextView.setText(mHashMap.get("otherInformationContent").get(1));
+                    sourceTextView.setText(mHashMap.get("otherInformationContent").get(2));
+                }
+
                 ArrayList<String> linkTitles = mHashMap.get("otherInformationLinkTitle");
                 cookies = mHashMap.get("cookies").get(0).split(";")[0].substring(1);
                 if (linkTitles.size() != 0){

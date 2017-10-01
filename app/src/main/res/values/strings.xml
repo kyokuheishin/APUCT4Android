@@ -2,10 +2,10 @@
     <string name="app_name">APU Campus Terminal for Android</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">APU Net Username</string>
-    <string name="prompt_password">Password </string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="prompt_email">ユーザネーム</string>
+    <string name="prompt_password">パスワード </string>
+    <string name="action_sign_in">ログイン</string>
+    <string name="action_sign_in_short">ログイン</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>

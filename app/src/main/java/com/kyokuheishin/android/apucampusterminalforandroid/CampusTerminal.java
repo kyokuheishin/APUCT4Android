@@ -339,7 +339,7 @@ public class CampusTerminal extends Application{
 
             for (Element otherInformation : otherInformations){
                 otherInformationList.add(otherInformation.text());
-                System.out.println(otherInformation.text());
+//                System.out.println(otherInformation.text());
             }
 
             for (Element otherInformationContent : otherInformationContents){
@@ -347,21 +347,21 @@ public class CampusTerminal extends Application{
                         otherInformationContentList.add(otherInformationContent.text());
                     }
 
-                System.out.println(otherInformationContent.text());
+//                System.out.println(otherInformationContent.text());
             }
             for (Element otherInformationLink:otherInformationLinks){
-                System.out.println(otherInformationLink.text());
+//                System.out.println(otherInformationLink.text());
                 otherInformationLinkTitleList.add(otherInformationLink.text());
                 otherInformationLinkList.add(otherInformationLink.attr("href"));
             }
 
             for (Element otherInformationFileLink:otherInformationFileLinks){
-                System.out.println(otherInformationFileLink.attr("href"));
+//                System.out.println(otherInformationFileLink.attr("href"));
                 otherInformationFileLinkList.add(otherInformationFileLink.attr("href"));
             }
 
             for (Element otherInformationFileTitle:otherInformationFileTitles){
-                System.out.println(otherInformationFileTitle.text());
+//                System.out.println(otherInformationFileTitle.text());
                 otherInformationFileTitleList.add(otherInformationFileTitle.text());
             }
 //            mCookies.add(cookies.toString());
@@ -374,7 +374,7 @@ public class CampusTerminal extends Application{
             detailMap.put("otherInformationFileLink",otherInformationFileLinkList);
             detailMap.put("cookies",mCookies);
 
-            System.out.println(detailMap);
+//            System.out.println(detailMap);
 
             return detailMap;
 
@@ -418,7 +418,7 @@ public class CampusTerminal extends Application{
             noticeMap.put("teacher",teacherList);
             noticeMap.put("content", contentList);
             noticeMap.put("noticeSendingDate",noticeSendingDateList);
-            System.out.println(noticeMap);
+//            System.out.println(noticeMap);
 
             return noticeMap;
         }
@@ -444,8 +444,8 @@ public class CampusTerminal extends Application{
 
 
 
-            System.out.println(informationTitleList);
-            System.out.println(informationContentList);
+//            System.out.println(informationTitleList);
+//            System.out.println(informationContentList);
         }
     }
 

@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 24
 
+
     defaultConfig {
         applicationId "com.kyokuheishin.android.apucampusterminalforandroid"
         minSdkVersion 19

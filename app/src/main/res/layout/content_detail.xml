@@ -15,10 +15,24 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="34sp"
+            android:textColor="#212121"
+            android:textStyle="normal"
+            android:id="@+id/detail_title"
+            android:transitionName="title"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
             android:textSize="14sp"
             android:textColor="@color/colorSecondaryText"

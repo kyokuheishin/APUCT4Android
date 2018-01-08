@@ -21,5 +21,23 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    
+    <style name="Toolbar.titleText" parent="Base.TextAppearance.AppCompat.Title">
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">8sp</item>
+    </style>
+
+    <style name="Theme.Toolbar" parent="ThemeOverlay.AppCompat.ActionBar">
+
+    </style>
+
+    <style name="Theme.Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">8sp</item>
+    </style>
 
 </resources>

@@ -17,39 +17,45 @@
     android:clickable="true"
     android:foreground="?android:selectableItemBackground"
     >
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:id="@+id/card_constraintLayout"
         >
+
         <TextView
+            android:textColor="#2196F3"
+
+            android:id="@+id/date_sending_text"
+            card_view:layout_constraintTop_toTopOf="@id/card_constraintLayout"
+            card_view:layout_constraintEnd_toEndOf="@id/card_constraintLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="24dp"
+            android:text="test2"/>
+        <TextView
+            card_view:layout_constraintTop_toBottomOf="@id/source_text"
             android:id="@+id/title_text"
             android:transitionName="title"
             android:fontFamily="sans-serif-medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:layout_marginTop="24dp"
+
+
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:paddingBottom="16dp"
+            android:paddingBottom="24dp"
             android:textSize="20sp"
             android:textColor="#212121"
+            android:singleLine="true"
 
             android:text="test"
             />
-        <TextView
-            android:paddingTop="16dp"
-            android:id="@+id/date_sending_text"
-            android:layout_below="@+id/title_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:padding="4dp"
-            android:text="test2"/>
+
 
         <TextView
             android:paddingTop="16dp"
@@ -58,25 +64,29 @@
             android:layout_width="match_parent"
             android:textSize="16sp"
             android:padding="4dp"
+            android:visibility="gone"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="text3"
             android:layout_height="wrap_content"/>
 
         <TextView
+            android:layout_marginTop="24dp"
             android:id="@+id/source_text"
-            android:layout_width="match_parent"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:text="test3"
-            android:padding="4dp"
+            android:singleLine="true"
+            card_view:layout_constraintTop_toTopOf="@id/card_constraintLayout"
+            card_view:layout_constraintStart_toStartOf="@id/card_constraintLayout"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_below="@id/date_reading_text"
-            android:textSize="16sp"
-            android:layout_marginBottom="24dp"
+
+            android:textSize="14sp"
+
             />
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
 
 

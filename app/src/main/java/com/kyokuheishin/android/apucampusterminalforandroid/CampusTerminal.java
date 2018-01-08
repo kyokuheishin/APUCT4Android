@@ -219,9 +219,9 @@ public class CampusTerminal extends Application{
 
 
                 String title = cell.getElementsByTag("h4").text();
-                String dateSending = cell.select(".date:eq(1)").text();
+                String dateSending = cell.select(".date:eq(1)").text().substring(5);
                 String dateReading = cell.select(".date:eq(2)").text();
-                String source = cell.select("[style=\"white-space: normal;\"]").text();
+                String source = cell.select("[style=\"white-space: normal;\"]").text().substring(5);
                 String link =cell.attr("href");
                 titleList.add(title);
                 dateListSending.add(dateSending);
@@ -275,9 +275,9 @@ public class CampusTerminal extends Application{
              messageMap.clear();
             for (Element cell :cells) {
                 String title = cell.getElementsByTag("h4").text();
-                String dateSending = cell.select(".date:eq(1)").text();
+                String dateSending = cell.select(".date:eq(1)").text().substring(5);
                 String dateReading = cell.select(".date:eq(2)").text();
-                String source = cell.select("[style=\"white-space: normal;\"]").text();
+                String source = cell.select("[style=\"white-space: normal;\"]").text().substring(5);
                 String link =cell.attr("href");
                 titleList.add(title);
                 dateListSending.add(dateSending);

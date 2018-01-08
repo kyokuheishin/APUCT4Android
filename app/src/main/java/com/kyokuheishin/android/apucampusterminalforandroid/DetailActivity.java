@@ -40,7 +40,7 @@ public class DetailActivity extends AppCompatActivity {
     private CampusTerminal ct;
     private CampusTerminal.ctMessage cm;
     private LinearLayout urlLinearLayout,fileLinearLayout;
-    private TextView bodyTextView,receivingTimeTextView,viewingPeriodTextView,sourceTextView;
+    private TextView bodyTextView,receivingTimeTextView,viewingPeriodTextView,sourceTextView,titleTextView;
     private TableRow urlTableRow, fileTableRow,periodTableRow;
     private String cookies;
     private ListView urlListView,fileListView;
@@ -53,14 +53,19 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.content_detail);
         Bundle bundle = getIntent().getExtras();
+        titleTextView = (TextView) findViewById(R.id.detail_title);
         if (bundle != null && bundle.containsKey("selectedNo.") && bundle.containsKey("title")){
-            setTitle(bundle.getString("title"));
+            titleTextView.setText(bundle.getString("title"));
+//            setTitle("");
             seletedNo = bundle.getInt("selectedNo.");
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimaryDark));
+
         ct = ((CampusTerminal)getApplicationContext());
         cm = MainActivity.cm;
 

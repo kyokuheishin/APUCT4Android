@@ -82,7 +82,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             if (Objects.equals(this.mreadingTimeList.get(position), "")){
                 holder.mReadingTimeTextView.setVisibility(View.GONE);
             }else {
-                holder.mReadingTimeTextView.setVisibility(View.VISIBLE);
+                holder.mReadingTimeTextView.setVisibility(View.GONE);
             }
             holder.mSendingTimeTextView.setText(this.msendingTimeList.get(position));
             holder.mSourceTextView.setText(this.msourceList.get(position));

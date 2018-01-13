@@ -22,7 +22,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:textSize="34sp"
+            android:textSize="24sp"
             android:textColor="#212121"
             android:textStyle="normal"
             android:id="@+id/detail_title"

@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.nfc.Tag;
 import android.os.Debug;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -30,6 +31,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -82,8 +84,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private EditText mHtmlView;
+    private CheckBox mCheckbox;
     private String html;
     private CampusTerminal ct;
+    private PasswordStore passwordStore;
     private boolean isSuccess;
 
     @Override
@@ -95,13 +99,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView = (AutoCompleteTextView) findViewById(R.id.username);
 //        populateAutoComplete();
 
-
+        mCheckbox = (CheckBox) findViewById(R.id.save_password);
 //        mHtmlView = (EditText) findViewById(R.id.html);
         mPasswordView = (EditText) findViewById(R.id.password);
+
+        passwordStore = new PasswordStore(getApplicationContext());
+
+        mEmailView.setText(passwordStore.get().get(0));
+        mPasswordView.setText(passwordStore.get().get(1));
+
+
+
+
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                if (id == R.integer.login || id == EditorInfo.IME_NULL) {
                     attemptLogin();
 
                     return true;
@@ -186,6 +199,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+
+
+
+        if (mCheckbox.isChecked()){
+            passwordStore.store(email,password);
+        }else {
+            passwordStore.store(email,"");
+        }
+
+
+
+
 
         boolean cancel = false;
         View focusView = null;

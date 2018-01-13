@@ -41,7 +41,7 @@
                     android:hint="@string/prompt_email"
                     android:inputType="text"
                     android:maxLines="20"
-                    android:text="@string/username"
+
                     android:singleLine="true"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -55,18 +55,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
+                    android:imeActionId="@integer/login"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:text="@string/password"
+
 
                     android:singleLine="true"/>
 
             </android.support.design.widget.TextInputLayout>
 
 
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/save_password"
+                android:text="@string/save_password"
+                />
 
             <Button
                 android:id="@+id/email_sign_in_button"

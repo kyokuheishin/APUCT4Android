@@ -15,8 +15,7 @@
     </string>
 
     <string name="title_activity_main">MainActivity</string>
-    <string name="username">bingqu15</string>
-    <string name="password">James1</string>
+
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -34,6 +33,9 @@
     <string name="detail_source">"送信元"</string>
     <string name="detail_url">"URL"</string>
     <string name="detail_file">"添付ファイル"</string>
+    <string name="preference_file_key">com.kyokuheishin.android.apucampusterminalforandroid</string>
+    <string name="default_value"></string>
+    <string name="save_password">パスワードを記憶する</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

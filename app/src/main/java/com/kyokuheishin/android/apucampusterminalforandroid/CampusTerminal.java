@@ -54,7 +54,7 @@ public class CampusTerminal extends Application{
             }).build();
     /*cookiesを保存するように設定*/
 
-    private  HashMap<String,ArrayList<String>> messageMap = new HashMap<>();
+    private  HashMap<String,ArrayList<String>> mHashMap = new HashMap<>();
     private  HashMap<String,ArrayList<String>> noticeMap = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
@@ -102,7 +102,7 @@ public class CampusTerminal extends Application{
         if(html==null)
             return html;
         Document document = Jsoup.parse(html);
-        document.outputSettings(new Document.OutputSettings().prettyPrint(false));//makes html() preserve linebreaks and spacing
+//        document.outputSettings(new Document.OutputSettings().prettyPrint(true));//makes html() preserve linebreaks and spacing
         document.select("br").append("\\n");
         document.select("p").prepend("");
 //        document.select("p").prepend("\\n\\n");
@@ -152,12 +152,7 @@ public class CampusTerminal extends Application{
      public class ctMessage {
          /*メッセージに関する処理*/
 
-        private  int page = 0;
-        private  ArrayList<String> titleList = new ArrayList<>();//タイトルを保存するためのArrayList
-        private  ArrayList<String> dateListSending =new ArrayList<>();//受信日時を保存するためのArrayList
-        private  ArrayList<String> dateListReading = new ArrayList<>();//既読日時を保存するためのArrayList
-        private  ArrayList<String> sourceList =new ArrayList<>();//送信元を保存するためのArrayList
-        private  ArrayList<String> linkList = new ArrayList<>();//リンクを保存するためのArrayList
+
 
         public void getInformationFromUniversity() throws IOException {
             ctGetMessageList(0);
@@ -179,13 +174,22 @@ public class CampusTerminal extends Application{
          }
          HashMap<String,ArrayList<String>> ctGetMessageList(int type) throws IOException{
 
+            HashMap<String,ArrayList<String>> messageMap = new HashMap<>();
+
             String msgsyucds = "";
+
+             int page = 0;
+             ArrayList<String> titleList = new ArrayList<>();//タイトルを保存するためのArrayList
+             ArrayList<String> dateListSending =new ArrayList<>();//受信日時を保存するためのArrayList
+             ArrayList<String> dateListReading = new ArrayList<>();//既読日時を保存するためのArrayList
+             ArrayList<String> sourceList =new ArrayList<>();//送信元を保存するためのArrayList
+             ArrayList<String> linkList = new ArrayList<>();//リンクを保存するためのArrayList
             titleList.clear();
             dateListSending.clear();
             dateListReading.clear();
             sourceList.clear();
             linkList.clear();
-            messageMap.clear();
+
             /*上記のArrayListの初期化*/
 
 
@@ -240,11 +244,21 @@ public class CampusTerminal extends Application{
             page = 1;
 //            System.out.println(messageMap);
 
+            mHashMap = (HashMap<String, ArrayList<String>>) messageMap.clone();
+
             return messageMap;
 
         }
 
          HashMap<String,ArrayList<String>>  ctGetMessageListNextPage() throws IOException{
+
+
+             int page = 0;
+             ArrayList<String> titleList = new ArrayList<>();//タイトルを保存するためのArrayList
+             ArrayList<String> dateListSending =new ArrayList<>();//受信日時を保存するためのArrayList
+             ArrayList<String> dateListReading = new ArrayList<>();//既読日時を保存するためのArrayList
+             ArrayList<String> sourceList =new ArrayList<>();//送信元を保存するためのArrayList
+             ArrayList<String> linkList = new ArrayList<>();//リンクを保存するためのArrayList
             /*次のページを読み込むに関する処理*/
             FormBody formBody = new FormBody.Builder()
                     .addEncoded("buttonName","backToList")
@@ -272,7 +286,7 @@ public class CampusTerminal extends Application{
              dateListReading.clear();
              sourceList.clear();
              linkList.clear();
-             messageMap.clear();
+             mHashMap.clear();
             for (Element cell :cells) {
                 String title = cell.getElementsByTag("h4").text();
                 String dateSending = cell.select(".date:eq(1)").text().substring(5);
@@ -285,24 +299,24 @@ public class CampusTerminal extends Application{
                 sourceList.add(source);
                 linkList.add(link);
             }
-             messageMap.put("title",titleList);
-             messageMap.put("dateSending",dateListSending);
-             messageMap.put("dateReading",dateListReading);
-             messageMap.put("source",sourceList);
-             messageMap.put("link",linkList);
+             mHashMap.put("title",titleList);
+             mHashMap.put("dateSending",dateListSending);
+             mHashMap.put("dateReading",dateListReading);
+             mHashMap.put("source",sourceList);
+             mHashMap.put("link",linkList);
 //            System.out.println(titleList);
 //            System.out.println(dateListReading);
 //            System.out.println(dateListSending);
 //            System.out.println(sourceList);
 //            System.out.println(linkList);
 
-             return messageMap;
+             return mHashMap;
         }
 
         HashMap ctGetMessageDetail(int messageNo) throws IOException{
             /*詳細メッセージに関する処理*/
 
-            HashMap<String,ArrayList<String>> detailMap = new HashMap<>();
+            
             ArrayList<String> bodyList = new ArrayList<>();
             ArrayList<String> otherInformationList = new ArrayList<>();
             ArrayList<String> otherInformationContentList = new ArrayList<>();
@@ -310,7 +324,7 @@ public class CampusTerminal extends Application{
             ArrayList<String> otherInformationLinkTitleList = new ArrayList<>();
             ArrayList<String> otherInformationFileTitleList = new ArrayList<>();
             ArrayList<String> otherInformationFileLinkList = new ArrayList<>();
-            ArrayList<String> links = messageMap.get("link");
+            ArrayList<String> links = mHashMap.get("link");
 
             Request request = new Request.Builder()
                     .url("https://portal2.apu.ac.jp/campusp/"+ links.get(messageNo))
@@ -365,18 +379,18 @@ public class CampusTerminal extends Application{
                 otherInformationFileTitleList.add(otherInformationFileTitle.text());
             }
 //            mCookies.add(cookies.toString());
-            detailMap.put("body",bodyList);
-            detailMap.put("otherInformationTitle",otherInformationList);
-            detailMap.put("otherInformationContent",otherInformationContentList);
-            detailMap.put("otherInformationLinkTitle",otherInformationLinkTitleList);
-            detailMap.put("otherInformationLink",otherInformationLinkList);
-            detailMap.put("otherInformationFileTitle",otherInformationFileTitleList);
-            detailMap.put("otherInformationFileLink",otherInformationFileLinkList);
-            detailMap.put("cookies",mCookies);
+            mHashMap.put("body",bodyList);
+            mHashMap.put("otherInformationTitle",otherInformationList);
+            mHashMap.put("otherInformationContent",otherInformationContentList);
+            mHashMap.put("otherInformationLinkTitle",otherInformationLinkTitleList);
+            mHashMap.put("otherInformationLink",otherInformationLinkList);
+            mHashMap.put("otherInformationFileTitle",otherInformationFileTitleList);
+            mHashMap.put("otherInformationFileLink",otherInformationFileLinkList);
+            mHashMap.put("cookies",mCookies);
 
-//            System.out.println(detailMap);
+//            System.out.println(mHashMap);
 
-            return detailMap;
+            return mHashMap;
 
 
         }

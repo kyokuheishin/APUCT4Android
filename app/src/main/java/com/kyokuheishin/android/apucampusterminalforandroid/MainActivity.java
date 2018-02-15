@@ -27,7 +27,7 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
 
-        implements NavigationView.OnNavigationItemSelectedListener {
+    implements NavigationView.OnNavigationItemSelectedListener {
     private CardView mCardView;
     private CampusTerminal ct;
     static CampusTerminal.ctMessage cm;
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private Toolbar toolbar;
+    private LatestMessageStore latestMessageStore;
     private boolean isUpdateFinished = true;
     private int mMessageType = 0;
     private int mMessageSizeOld;
@@ -75,6 +76,8 @@ public class MainActivity extends AppCompatActivity
 
         ct = ((CampusTerminal) getApplicationContext());
         cm = ct.new ctMessage();
+        latestMessageStore = new LatestMessageStore(getApplicationContext());
+
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
         navigationView.setCheckedItem(R.id.nav_information_from_university);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -225,6 +228,14 @@ public class MainActivity extends AppCompatActivity
             super.onPostExecute(o);
             if (mHashMap != null) {
                 /*コンテンツをRecyclerViewに読み込ませるための処理*/
+
+                String title = mHashMap.get("title").get(0);
+
+                if (mMessageType ==0){
+                    latestMessageStore.storeLatestMessageTitle(title);
+                }else {
+                    latestMessageStore.storeLatestImportantTitle(title);
+                }
 
                 mAdapter = new RecyclerViewAdapter(mHashMap, MainActivity.this);
                 recyclerView.setHasFixedSize(true);

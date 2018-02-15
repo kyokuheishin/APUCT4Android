@@ -118,6 +118,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             this.mHashMap = hashMap;
             this.mSize = mHashMap.get("title").size();
+            this.mtitleList = mHashMap.get("title");
+            this.mSize = mtitleList.size();
+            this.mreadingTimeList = mHashMap.get("dateReading");
+            this.msendingTimeList = mHashMap.get("dateSending");
+            this.msourceList = mHashMap.get("source");
 
 
         notifyDataSetChanged();

@@ -72,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/save_password"
                 android:text="@string/save_password"
+                android:checked="true"
                 />
 
             <Button

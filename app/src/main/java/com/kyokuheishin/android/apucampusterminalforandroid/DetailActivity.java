@@ -56,19 +56,6 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.content_detail);
         Bundle bundle = getIntent().getExtras();
         titleTextView = (TextView) findViewById(R.id.detail_title);
-        if (bundle != null && bundle.containsKey("selectedNo.") && bundle.containsKey("title")){
-            titleTextView.setText(bundle.getString("title"));
-//            setTitle("");
-            seletedNo = bundle.getInt("selectedNo.");
-        }
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimaryDark));
-
-        ct = ((CampusTerminal)getApplicationContext());
-        cm = MainActivity.cm;
-
         bodyTextView = (TextView)findViewById(R.id.detail_body);
         receivingTimeTextView = (TextView)findViewById(R.id.detail_receiving_time);
         viewingPeriodTextView = (TextView)findViewById(R.id.detail_viewing_period);
@@ -80,11 +67,27 @@ public class DetailActivity extends AppCompatActivity {
         urlTableRow = (TableRow) findViewById(R.id.content_detail_url_row);
         fileTableRow = (TableRow)findViewById(R.id.content_detail_file_row);
         periodTableRow = (TableRow)findViewById(R.id.detail_viewing_period_row);
+        if (bundle != null && bundle.containsKey("selectedNo.") && bundle.containsKey("title")){
+            titleTextView.setText(bundle.getString("title"));
+//            setTitle("");
+            seletedNo = bundle.getInt("selectedNo.");
+            ct = ((CampusTerminal)getApplicationContext());
+            cm = MainActivity.cm;
+            getDetail getDetail = new getDetail();
+            getDetail.execute();
+        }
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimaryDark));
+
+
+
+
 
 //        urlListView = (ListView)findViewById(R.id.detail_url_list);
 
-        getDetail getDetail = new getDetail();
-        getDetail.execute();
+
     }
 
     private void addHyperlinkTextView (ArrayList<String> titles, final ArrayList<String> links,

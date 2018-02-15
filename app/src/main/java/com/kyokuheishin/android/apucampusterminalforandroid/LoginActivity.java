@@ -202,11 +202,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
 
-        if (mCheckbox.isChecked()){
-            passwordStore.store(email,password);
-        }else {
-            passwordStore.store(email,"");
-        }
+
 
 
 
@@ -232,8 +228,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (TextUtils.isEmpty(password)){
             mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
+            if (mEmailView.getText().toString().equals("test")){
+                Intent intent = new Intent(LoginActivity.this,eggActivity.class);
+                startActivity(intent);
+            }
             cancel = true;
         }
+
+
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -242,11 +244,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            if (mCheckbox.isChecked()){
+                passwordStore.store(email,password);
+            }else {
+                passwordStore.store(email,"");
+            }
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
 
         }
+
+
     }
 
     private boolean isEmailValid(String email) {

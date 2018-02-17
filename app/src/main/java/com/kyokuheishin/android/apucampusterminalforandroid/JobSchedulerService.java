@@ -1,11 +1,13 @@
 package com.kyokuheishin.android.apucampusterminalforandroid;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ import java.util.HashMap;
 public class JobSchedulerService extends JobService {
 
 
-
+    private Context context;
     private PasswordStore passwordStore;
     private LatestMessageStore latestMessageStore;
 
@@ -26,124 +28,49 @@ public class JobSchedulerService extends JobService {
     @Override
     public void onCreate() {
         super.onCreate();
+        context = getApplicationContext();
+        passwordStore = new PasswordStore(context);
 
     }
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
+        final JobParameters parameters = jobParameters;
+        Log.d("CT_CHECKER_TASK","Start checking...");
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void,Void,Void> task = new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                CTService.loginService loginService = new CTService.loginService(passwordStore.get().get(0),passwordStore.get().get(1),context);
+                loginService.execute();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                Log.d("CT_CHECKER_TASK","Finish checking...");
+                jobFinished(parameters,true);
+            }
+
+        };
+
+        task.execute();
 
         return true;
     }
 
+
+
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
+        Log.d("CT_CHECKER_TASK","End checking...");
         return false;
     }
 
-    public class loginService extends AsyncTask<Void,Void,Boolean>{
-        private CampusTerminal ct;
-        private String mUsername;
-        private String mPassword;
-        private boolean loginStatus;
-        private Context context;
-
-        loginService(String username, String password,Context context){
-            mUsername = username;
-            mPassword = password;
-            this.context = context;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            super.onPostExecute(success);
-            if (success) {
-                //TODO:Add calling method to get the latest message
-                JobSchedulerService.checkerService checkerService = new checkerService(ct,context);
-                checkerService.execute();
 
 
-            }
-        }
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
-
-            try {
-                ct = new CampusTerminal();
-                ct.ctSpTop();
-                loginStatus = ct.ctLogin(mUsername,mPassword);
-                Thread.sleep(3000);
-                return loginStatus;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-
-        }
-    }
-
-     public class checkerService extends AsyncTask<Void,Void,Boolean>{
-
-        private CampusTerminal ct;
-        private CampusTerminal.ctMessage cm;
-        private HashMap<String, ArrayList<String>> informationFromUniversiyHashmap;
-        private HashMap<String, ArrayList<String>> importantMessageToYouHashmap;
-        private Context context;
-
-        public checkerService(CampusTerminal ct,Context context) {
-            this.ct = ct;
-            this.context = context;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-//            informationFromUniversiyHashmap = new HashMap<>();
-
-            cm = ct.new ctMessage();
-            try {
-                cm.ctInformation();
-                informationFromUniversiyHashmap = new HashMap<>(cm.ctGetMessageList(0));
-//                importantMessageToYouHashmap = new HashMap<>(cm.ctGetMessageList(1));
-                importantMessageToYouHashmap = new HashMap<>(cm.ctGetMessageList(1));
-                return true;
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-
-        }
-
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (success){
-                latestMessageStore = new LatestMessageStore(context);
-                ArrayList latestMessageArrayList = latestMessageStore.get();
-                int i = 0;
-                for (String title:informationFromUniversiyHashmap.get("title")){
-                    if (title.equals(latestMessageArrayList.get(0))){
-                        i++;
-                        break;
-                    }else {
-                        Notification.Builder builder = new Notification.Builder(context);
-                        builder.setSmallIcon(R.drawable.ic_menu_camera);
-                        builder.setAutoCancel(true);
-                        builder.setContentTitle("新しい大学からのメッセージがあります");
-                        builder.setContentText(title);
-                        NotificationManager notificationManager =  (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-                        notificationManager.notify(i,builder.build());
-                        i++;
-                    }
-                }
-            }
-        }
-    }
 }
 
 

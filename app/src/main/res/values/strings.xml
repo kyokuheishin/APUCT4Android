@@ -128,4 +128,6 @@
     </string>
     <string name="title_activity_egg">eggActivity</string>
     <string name="test_notification">Notification Tester</string>
+    <string name="test_job_scheduler">JobScheduler Tester</string>
+    <string name="job_scheduler_cancel_all">Cancel All Jobs</string>
 </resources>

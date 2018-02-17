@@ -22,7 +22,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -99,6 +101,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView = (AutoCompleteTextView) findViewById(R.id.username);
 //        populateAutoComplete();
 
+
         mCheckbox = (CheckBox) findViewById(R.id.save_password);
 //        mHtmlView = (EditText) findViewById(R.id.html);
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -108,6 +111,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setText(passwordStore.get().get(0));
         mPasswordView.setText(passwordStore.get().get(1));
 
+        TextWatcher textWatcher = new usernameTextWatcher();
+
+        mEmailView.addTextChangedListener(textWatcher);
+
+//        mEmailView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+//                if (mEmailView.getText().toString().equals("test")){
+//                    Intent intent = new Intent(LoginActivity.this,eggActivity.class);
+//                    startActivity(intent);
+//                }
+//                return false;
+//            }
+//        });
 
 
 
@@ -433,5 +450,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    private class usernameTextWatcher implements TextWatcher{
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (charSequence.toString().equals("test")){
+                Intent intent = new Intent(LoginActivity.this,eggActivity.class);
+                startActivity(intent);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    }
 }
 

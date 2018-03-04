@@ -29,4 +29,12 @@
         android:id="@+id/job_scheduler_cancel_all"
         />
 
+    <Button
+        app:layout_constraintTop_toBottomOf="@id/job_scheduler_cancel_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title_activity_settings"
+        android:id="@+id/open_settings"
+        />
+
 </android.support.constraint.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,7 +24,7 @@ public class eggActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_egg);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setTitle("Easter Eggs");
         setSupportActionBar(toolbar);
         jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
@@ -34,7 +35,7 @@ public class eggActivity extends AppCompatActivity {
 
 
 
-        Button buttonNotificationTester = (Button)findViewById(R.id.notification_tester);
+        Button buttonNotificationTester = findViewById(R.id.notification_tester);
         buttonNotificationTester.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -44,7 +45,7 @@ public class eggActivity extends AppCompatActivity {
             }
         });
 
-        Button buttonJobSchedulerTester = (Button) findViewById(R.id.job_scheduler_tester);
+        Button buttonJobSchedulerTester = findViewById(R.id.job_scheduler_tester);
         buttonJobSchedulerTester.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,7 +54,7 @@ public class eggActivity extends AppCompatActivity {
             }
         });
 
-        Button buttonCancelAllJobs = (Button) findViewById(R.id.job_scheduler_cancel_all);
+        Button buttonCancelAllJobs = findViewById(R.id.job_scheduler_cancel_all);
         buttonCancelAllJobs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,7 +63,16 @@ public class eggActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        Button buttonOpenSettings = findViewById(R.id.open_settings);
+        buttonOpenSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(eggActivity.this,SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

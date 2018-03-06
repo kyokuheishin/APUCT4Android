@@ -26,6 +26,7 @@
     <string name="important_message_to_you">"あなた宛の重要なお知らせ"</string>
     <string name="course_notice">"教務掲示"</string>
     <string name="logout">"ログアウト"</string>
+    <string name="setting">設定</string>
     <string name="time_receiving">"受信日時"</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="detail_body">"本文"</string>
@@ -179,8 +180,11 @@
     </string>
 
     <string name="pref_title_enable_push">通知機能</string>
+    <string name="pref_key_enable_push">switch_push</string>
     <string name="pref_description_enable_push">Campus Terminalが新しいお知らせを掲載する時に自動的に通知をプッシュする機能
     </string>
+
+    <string name="pref_key_time_interval_list">time_interval_list</string>
 
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">John Smith</string>

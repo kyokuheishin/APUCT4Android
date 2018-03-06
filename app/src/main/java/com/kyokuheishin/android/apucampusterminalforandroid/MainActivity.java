@@ -1,5 +1,6 @@
 package com.kyokuheishin.android.apucampusterminalforandroid;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -178,6 +179,15 @@ public class MainActivity extends AppCompatActivity
             getList.execute();
             Toast.makeText(MainActivity.this, "ロード中…", Toast.LENGTH_SHORT).show();
 
+        }
+        else if (id == R.id.nav_logout){
+            Intent intent = new Intent(this,LoginActivity.class);
+            startActivity(intent);
+        }
+
+        else if (id == R.id.nav_setting){
+            Intent intent = new Intent(this,SettingsActivity.class);
+            startActivity(intent);
         }
 //        else if (id == R.id.nav_manage) {
 //

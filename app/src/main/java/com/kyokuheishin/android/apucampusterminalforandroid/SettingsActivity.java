@@ -1,6 +1,9 @@
 package com.kyokuheishin.android.apucampusterminalforandroid;
 
 import android.annotation.TargetApi;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -12,12 +15,14 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.List;
@@ -120,8 +125,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setupActionBar();
 //        getActionBar().setDisplayHomeAsUpEnabled(false);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -175,6 +192,59 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
 
+            final SwitchPreference pushEnableSwitchPreference = (SwitchPreference) getPreferenceScreen().findPreference(getString(R.string.pref_key_enable_push));
+
+            final ListPreference timeIntervalListPreference = (ListPreference)getPreferenceScreen().findPreference(getString(R.string.pref_key_time_interval_list));
+
+
+            timeIntervalListPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object o) {
+                    String value = (String)o;
+                    Log.d("value string",value);
+                    JobScheduler jobScheduler = (JobScheduler) getActivity().getSystemService(Context.JOB_SCHEDULER_SERVICE);
+                    JobInfo.Builder builder = new JobInfo.Builder(0,new ComponentName(getActivity(),JobSchedulerService.class));
+                    builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
+                    builder.setPersisted(true);
+                    builder.setPeriodic(Integer.parseInt(value)*1000);
+//                    Log.d("value string",value);
+                    if (jobScheduler!= null){
+                        jobScheduler.cancelAll();
+                    }
+                    if (pushEnableSwitchPreference.isChecked()){
+                        if (jobScheduler != null) {
+                            jobScheduler.schedule(builder.build());
+                        }
+                    }
+
+                    return true;
+
+
+                }
+            });
+
+            pushEnableSwitchPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object o) {
+                    String value = timeIntervalListPreference.getValue();
+                    JobScheduler jobScheduler = (JobScheduler) getActivity().getSystemService(Context.JOB_SCHEDULER_SERVICE);
+                    JobInfo.Builder builder = new JobInfo.Builder(0,new ComponentName(getActivity(),JobSchedulerService.class));
+                    builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
+                    builder.setPeriodic(Integer.parseInt(value)*1000);
+                    builder.setPersisted(true);
+                    if (jobScheduler!= null){
+                        jobScheduler.cancelAll();
+                    }
+                if ((Boolean)o){
+                    if (jobScheduler != null) {
+                        jobScheduler.schedule(builder.build());
+                    }
+                }
+                    return true;
+                }
+            });
+
+
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
@@ -205,6 +275,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_notification);
             setHasOptionsMenu(true);
+
+
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are

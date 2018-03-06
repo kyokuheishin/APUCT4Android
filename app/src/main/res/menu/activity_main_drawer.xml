@@ -18,11 +18,18 @@
 
 
             android:title="@string/important_message_to_you"/>
+
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/setting"
+            />
+
+        <item
+            android:id="@+id/nav_logout"
             android:icon="@drawable/ic_navigation_logout"
-            android:enabled="false"
-            android:visible="false"
+            android:enabled="true"
+            android:visible="true"
             android:title="@string/logout"/>
     </group>
 

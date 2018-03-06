@@ -2,7 +2,7 @@
 
     <SwitchPreference
         android:defaultValue="false"
-        android:key="switch_push"
+        android:key="@string/pref_key_enable_push"
         android:summary="@string/pref_description_enable_push"
         android:title="@string/pref_title_enable_push" />
 
@@ -20,7 +20,7 @@
         android:defaultValue="5"
         android:entries="@array/list_time_interval"
         android:entryValues="@array/list_time_interval_values"
-        android:key="example_list"
+        android:key="@string/pref_key_time_interval_list"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         android:title="@string/pref_title_time_interval" />

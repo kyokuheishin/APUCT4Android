@@ -38,6 +38,9 @@
     <string name="preference_file_latest_message_key">com.kyokuheishin.android.apucampusterminalforandroid.message</string>
     <string name="default_value"></string>
     <string name="save_password">パスワードを記憶する</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-5488870871964145/7853619039</string>
+
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -136,8 +139,8 @@
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
-    <string name="pref_header_about">About</string>
+    <string name="pref_header_general">全般</string>
+    <string name="pref_header_about">このアプリについて</string>
     
     <string name="pref_about_open_source_license_title">フリーソフトウェアライセンス</string>
     <string name="pref_about_open_source_license">open_source_license</string>

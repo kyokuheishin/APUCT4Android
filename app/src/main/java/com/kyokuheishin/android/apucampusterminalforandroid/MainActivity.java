@@ -16,8 +16,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kyokuheishin.android.apucampusterminalforandroid.RecyclerViewAdapter.RecyclerViewAdapter;
@@ -41,6 +47,8 @@ public class MainActivity extends AppCompatActivity
     private boolean isUpdateFinished = true;
     private int mMessageType = 0;
     private int mMessageSizeOld;
+    private int menuFlag;
+    private AdView mAdView;
 
 
     @Override
@@ -54,6 +62,8 @@ public class MainActivity extends AppCompatActivity
 
 //        mCardView = (CardView) findViewById(R.id.card_view);
         setSupportActionBar(toolbar);
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +91,7 @@ public class MainActivity extends AppCompatActivity
 
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
         navigationView.setCheckedItem(R.id.nav_information_from_university);
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -114,7 +125,44 @@ public class MainActivity extends AppCompatActivity
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+
+
+        View hview = navigationView.getHeaderView(0);
+
+        TextView mailTextView = hview.findViewById(R.id.textView_username);
+        PasswordStore passwordStore = new PasswordStore(getApplicationContext());
+        mailTextView.setText(passwordStore.get().get(0));
+
+
+        drawer.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                if (menuFlag == R.id.nav_setting){
+                    Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+                    startActivity(intent);
+                }else if (menuFlag == R.id.nav_logout){
+                    Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+
+//        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdView);
+//        PublisherAdRequest adRequest = new PublisherAdRequest.Builder().build();
+//        mPublisherAdView.loadAd(adRequest);
+
+        MobileAds.initialize(this,getString(R.string.banner_ad_unit_id));
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+//                .addTestDevice("71407EFC6E0E6FA094FF12A423BA3A12")
+
+                .build();
+        mAdView.loadAd(adRequest);
     }
+
+
 
 
     @Override
@@ -149,12 +197,18 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         /*メッセージ種類の切替に関する処理*/
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
 
         if (id == R.id.nav_information_from_university) {
             recyclerView.setVisibility(View.INVISIBLE);
@@ -164,6 +218,8 @@ public class MainActivity extends AppCompatActivity
             mMessageType = 0;
             GetList getList = new GetList();
             getList.execute();
+
+            return true;
 
 
 
@@ -179,15 +235,24 @@ public class MainActivity extends AppCompatActivity
             getList.execute();
             Toast.makeText(MainActivity.this, "ロード中…", Toast.LENGTH_SHORT).show();
 
+
+            return true;
         }
         else if (id == R.id.nav_logout){
-            Intent intent = new Intent(this,LoginActivity.class);
-            startActivity(intent);
+            menuFlag =id;
+
+
+            return false;
         }
 
         else if (id == R.id.nav_setting){
-            Intent intent = new Intent(this,SettingsActivity.class);
-            startActivity(intent);
+            menuFlag = id;
+
+
+            return false;
+        }
+        else {
+            return false;
         }
 //        else if (id == R.id.nav_manage) {
 //
@@ -198,9 +263,8 @@ public class MainActivity extends AppCompatActivity
 //
 //        }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+
+
     }
 
     private class GetList extends AsyncTask {

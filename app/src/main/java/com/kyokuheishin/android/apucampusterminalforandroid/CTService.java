@@ -117,7 +117,7 @@ public class CTService {
                         break;
                     }else {
                         Notification.Builder builder = new Notification.Builder(context);
-                        builder.setSmallIcon(R.drawable.ic_menu_camera);
+                        builder.setSmallIcon(R.drawable.ic_school_black_24dp);
                         builder.setAutoCancel(true);
                         builder.setContentTitle("大学からのメッセージ");
                         builder.setContentText(title);
@@ -134,7 +134,7 @@ public class CTService {
                         break;
                     }else {
                         Notification.Builder builder = new Notification.Builder(context);
-                        builder.setSmallIcon(R.drawable.ic_menu_camera);
+                        builder.setSmallIcon(R.drawable.ic_announcement_black_24dp);
                         builder.setAutoCancel(true);
                         builder.setContentTitle("あなた宛の重要なお知らせ");
                         builder.setContentText(title);

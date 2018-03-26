@@ -7,13 +7,8 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.Layout;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,16 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.graphics.Canvas;
-import android.util.AttributeSet;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import static com.kyokuheishin.android.apucampusterminalforandroid.R.color.colorAccent;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -55,18 +45,18 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_detail);
         Bundle bundle = getIntent().getExtras();
-        titleTextView = (TextView) findViewById(R.id.detail_title);
-        bodyTextView = (TextView)findViewById(R.id.detail_body);
-        receivingTimeTextView = (TextView)findViewById(R.id.detail_receiving_time);
-        viewingPeriodTextView = (TextView)findViewById(R.id.detail_viewing_period);
-        sourceTextView = (TextView)findViewById(R.id.detail_source);
+        titleTextView = findViewById(R.id.detail_title);
+        bodyTextView = findViewById(R.id.detail_body);
+        receivingTimeTextView = findViewById(R.id.detail_receiving_time);
+        viewingPeriodTextView = findViewById(R.id.detail_viewing_period);
+        sourceTextView = findViewById(R.id.detail_source);
 
-        urlLinearLayout = (LinearLayout) findViewById(R.id.content_detail_url);
-        fileLinearLayout = (LinearLayout) findViewById(R.id.content_detail_file);
+        urlLinearLayout = findViewById(R.id.content_detail_url);
+        fileLinearLayout = findViewById(R.id.content_detail_file);
 
-        urlTableRow = (TableRow) findViewById(R.id.content_detail_url_row);
-        fileTableRow = (TableRow)findViewById(R.id.content_detail_file_row);
-        periodTableRow = (TableRow)findViewById(R.id.detail_viewing_period_row);
+        urlTableRow = findViewById(R.id.content_detail_url_row);
+        fileTableRow = findViewById(R.id.content_detail_file_row);
+        periodTableRow = findViewById(R.id.detail_viewing_period_row);
         if (bundle != null && bundle.containsKey("selectedNo.") && bundle.containsKey("title")){
             titleTextView.setText(bundle.getString("title"));
 //            setTitle("");
@@ -114,9 +104,9 @@ public class DetailActivity extends AppCompatActivity {
 
                 }else if (type == 1){
                     textView.setText(titles.get(i));
-                    Resources resource = (Resources) getBaseContext().getResources();
+                    Resources resource = getBaseContext().getResources();
                     ColorStateList colorStateList =
-                            (ColorStateList) resource.getColorStateList(R.color.colorAccent);
+                            resource.getColorStateList(R.color.colorAccent);
                     textView.setTextColor(colorStateList);
                     textView.setPaintFlags(textView.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
                     textView.setClickable(true);

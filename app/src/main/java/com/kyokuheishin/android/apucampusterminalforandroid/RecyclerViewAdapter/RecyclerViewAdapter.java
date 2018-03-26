@@ -53,11 +53,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         MessageViewHolder(View itemView) {
             super(itemView);
-            mCardView = (CardView) itemView.findViewById(R.id.card_view);
-            mTitleTextView = (TextView) itemView.findViewById(R.id.title_text);
-            mSendingTimeTextView = (TextView)itemView.findViewById(R.id.date_sending_text);
-            mReadingTimeTextView = (TextView)itemView.findViewById(R.id.date_reading_text);
-            mSourceTextView = (TextView) itemView.findViewById(R.id.source_text);
+            mCardView = itemView.findViewById(R.id.card_view);
+            mTitleTextView = itemView.findViewById(R.id.title_text);
+            mSendingTimeTextView = itemView.findViewById(R.id.date_sending_text);
+            mReadingTimeTextView = itemView.findViewById(R.id.date_reading_text);
+            mSourceTextView = itemView.findViewById(R.id.source_text);
 
         }
     }
@@ -101,7 +101,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.putExtra("selectedNo.",position);
                 intent.putExtra("title",mHashMap.get("title").get(position));
-                ActivityCompat.startActivity((Activity)mContext,intent,compat.toBundle());
+                ActivityCompat.startActivity(mContext,intent,compat.toBundle());
             }
         });
     }

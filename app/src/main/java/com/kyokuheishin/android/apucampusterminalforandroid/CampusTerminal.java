@@ -142,10 +142,7 @@ public class CampusTerminal extends Application{
         String html = response.body().string();
         Document document = Jsoup.parse(html);
         Elements elements = document.select("[style=\"color:red\"]");
-        if (elements.size()>0){
-            return false;
-        }
-        else return true;
+        return elements.size() <= 0;
     }
 
 

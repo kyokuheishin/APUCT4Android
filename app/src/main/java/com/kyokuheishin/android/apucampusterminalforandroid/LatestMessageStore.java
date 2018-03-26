@@ -1,7 +1,6 @@
 package com.kyokuheishin.android.apucampusterminalforandroid;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Base64;
 
 import java.util.ArrayList;
 

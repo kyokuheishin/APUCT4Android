@@ -207,7 +207,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
                     builder.setPersisted(true);
                     builder.setPeriodic(Integer.parseInt(value)*60*1000);
-//                    Log.d("value string",value);
+                    Log.d("value string",String.valueOf(Integer.parseInt(value)*60*1000));
                     if (jobScheduler!= null){
                         jobScheduler.cancelAll();
                     }
@@ -231,6 +231,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     JobInfo.Builder builder = new JobInfo.Builder(0,new ComponentName(getActivity(),JobSchedulerService.class));
                     builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
                     builder.setPeriodic(Integer.parseInt(value)*60*1000);
+                    Log.d("value string",String.valueOf(Integer.parseInt(value)*60*1000));
                     builder.setPersisted(true);
                     if (jobScheduler!= null){
                         jobScheduler.cancelAll();

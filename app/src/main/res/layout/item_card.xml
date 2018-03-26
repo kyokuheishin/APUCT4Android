@@ -16,7 +16,7 @@
 
     android:clickable="true"
     android:foreground="?android:selectableItemBackground"
-    >
+    android:focusable="true">
     <android.support.constraint.ConstraintLayout
         android:gravity="center"
         android:layout_width="match_parent"

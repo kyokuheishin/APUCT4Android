@@ -1,5 +1,10 @@
 # APUCT4Android
 An Android client for campus terminal of APU(Ritsumeikan Asia Pacific University).
+# Usage
+Enter your Username and Password, then enjoy it!
+# Features
+- Notifacation of new messages from University 
+
 # License
 ## About Okio and OKHTTP used in this project
     Copyright 2013 Square, Inc.
